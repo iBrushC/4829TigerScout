@@ -5,6 +5,7 @@ import { StyleSheet, Text, View, Button, Pressable, TextInput } from 'react-nati
 // Component imports
 import ColorScheme from '../../common/ColorScheme';
 import { TTButton, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
+import { TTDropdown } from '../components/InputComponents';
 
 // Main function
 const Settings = ({route, navigation}) => {
@@ -27,6 +28,8 @@ const Settings = ({route, navigation}) => {
             <TTPushButton text="Auto Clear Synced Local Data" state={autoClear} setState={setAutoClear} buttonStyle={{padding: 12, backgroundColor: "orange", borderRadius: 5}} buttonPushedStyle={{padding: 12, backgroundColor: "red", borderRadius: 5}}/>
 
             <TTSimpleCheckbox text="And heres a random checkbox" state={randomVar} setState={setRandomVar} boxCheckedStyle={{padding: 15, backgroundColor: "green", borderRadius: 15}} boxUncheckedStyle={{padding: 15, backgroundColor: "red"}}/>
+
+            <TTDropdown/>
 
             {/* Really shouldn't be using default buttons for anything */}
             <Button
