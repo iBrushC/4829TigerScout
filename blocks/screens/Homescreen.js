@@ -4,62 +4,102 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // Literally just to get cool background lmao
 
 // Component imports
-import { screenHeight } from '../../common/Constants';
+import { vh, vw } from '../../common/Constants';
+import { globalButtonStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
+import { TTButton } from '../components/ButtonComponents';
 
 // Main function
 const Homescreen = ({route, navigation}) => {
     return (
-        <View style={styles.container}>
+        <View style={globalConatinerStyles.container}>
+            {/* Background */}
             <LinearGradient
                 colors={['#2A3638F0', '#3E474321']}
-                style={styles.background}
+                style={globalConatinerStyles.background}
             />
             
-            <Text>Home Screen!</Text>
-            
             {/* Scout */}
-            <Button 
-                title="Scout Team"
+            <TTButton 
+                text="Scout Team"
+                buttonStyle={[
+                    globalButtonStyles.primaryButton,
+                    {   
+                        borderRadius: 5 * vw,
+                        height: 50 * vh,
+                    }
+                ]}
+                textStyle={[
+                    globalTextStyles.primaryText,
+                    {
+                        fontSize: 60,
+                        color: "#FFFFFF"
+                    }
+                ]}
                 onPress= {() => navigation.navigate("ScoutTeam", {})}
             />
 
             {/* Local Data */}
-            <Button 
-                title="Local Data"
+            <TTButton 
+                text="Local Data"
+                buttonStyle={[
+                    globalButtonStyles.secondaryButton,
+                    {   
+                        borderRadius: 5 * vw,
+                        height: 10 * vh,
+                    }
+                ]}
+                textStyle={[
+                    globalTextStyles.primaryText,
+                    {
+                        fontSize: 42,
+                        color: "#FFFFFF"
+                    }
+                ]}
                 onPress= {() => navigation.navigate("LocalData", {})}
             />
 
             {/* Cloud Data */}
-            <Button 
-                title="Cloud Data"
+            <TTButton 
+                text="Cloud Data"
+                buttonStyle={[
+                    globalButtonStyles.secondaryButton,
+                    {   
+                        borderRadius: 5 * vw,
+                        height: 10 * vh,
+                    }
+                ]}
+                textStyle={[
+                    globalTextStyles.primaryText,
+                    {
+                        fontSize: 42,
+                        color: "#FFFFFF"
+                    }
+                ]}
                 onPress= {() => navigation.navigate("CloudData", {})}
             />
 
             {/* Settings */}
-            <Button 
-                title="Settings"
+            <TTButton 
+                text="Settings"
+                buttonStyle={[
+                    globalButtonStyles.secondaryButton,
+                    {   
+                        borderRadius: 5 * vw,
+                        height: 10 * vh,
+                    }
+                ]}
+                textStyle={[
+                    globalTextStyles.primaryText,
+                    {
+                        fontSize: 42,
+                        color: "#FFFFFF"
+                    }
+                ]}
                 onPress= {() => navigation.navigate("Settings", {})}
             />
         </View>
     );
 }
-
-// Stylesheet
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#1E1E1E',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    background: {
-        position: "absolute",
-        left: 0,
-        right: 0,
-        top: 0,
-        height: screenHeight,
-    }
-});
 
 // Exports
 export default Homescreen;

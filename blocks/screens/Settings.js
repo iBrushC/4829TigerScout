@@ -1,6 +1,6 @@
 // Library imports
 import * as React from 'react';
-import { StyleSheet, Text, View, Button, Pressable, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
 
 // Component imports
 import ColorScheme from '../../common/ColorScheme';
@@ -13,6 +13,7 @@ const Settings = ({route, navigation}) => {
     const [autoSync, setAutoSync] = React.useState(false);
     const [autoClear, setAutoClear] = React.useState(false);
     const [randomVar, setRandomVar] = React.useState(false);
+    const [dropdown, setDropdown] = React.useState("Select an Option");
 
     // JSX
     return (
@@ -23,19 +24,47 @@ const Settings = ({route, navigation}) => {
                 placeholder="Scouter Name"
             />
 
-            <TTButton text="Sample Button!" buttonStyle={{padding: 12, backgroundColor: "orange", borderRadius: 5}} textStyle={{font: "Comic Sans"}}/>
-            <TTPushButton text="Currently Not Syncing to Cloud" pushText="Now Syncing to Cloud!" state={autoSync} setState={setAutoSync} buttonStyle={{padding: 12, backgroundColor: "orange", borderRadius: 5}} buttonPushedStyle={{padding: 12, backgroundColor: "red", borderRadius: 5}}/>
-            <TTPushButton text="Auto Clear Synced Local Data" state={autoClear} setState={setAutoClear} buttonStyle={{padding: 12, backgroundColor: "orange", borderRadius: 5}} buttonPushedStyle={{padding: 12, backgroundColor: "red", borderRadius: 5}}/>
+            <TTButton 
+                text="Sample Button!" 
+                buttonStyle={{padding: 12, borderRadius: 5}} 
+                textStyle={{font: "Comic Sans"}}
+            />
+            <TTPushButton 
+                text="Currently Not Syncing to Cloud" 
+                pushText="Now Syncing to Cloud!" 
+                state={autoSync} 
+                setState={setAutoSync} 
+                buttonStyle={{padding: 12, backgroundColor: "orange", borderRadius: 5}} 
+                buttonPushedStyle={{padding: 12, backgroundColor: "red", borderRadius: 5}}
+            />
+            <TTPushButton 
+                text="Auto Clear Synced Local Data" 
+                state={autoClear} 
+                setState={setAutoClear} 
+                buttonStyle={{padding: 12, backgroundColor: "orange", borderRadius: 5}} 
+                buttonPushedStyle={{padding: 12, backgroundColor: "red", borderRadius: 5}}
+            />
 
-            <TTSimpleCheckbox text="And heres a random checkbox" state={randomVar} setState={setRandomVar} boxCheckedStyle={{padding: 15, backgroundColor: "green", borderRadius: 15}} boxUncheckedStyle={{padding: 15, backgroundColor: "red"}}/>
+            <TTSimpleCheckbox 
+                text="And heres a random checkbox" 
+                state={randomVar} 
+                setState={setRandomVar} 
+                boxCheckedStyle={{padding: 15, backgroundColor: "green", borderRadius: 15}} 
+                boxUncheckedStyle={{padding: 15, backgroundColor: "red"}}
+            />
 
-            <TTDropdown/>
+            <TTDropdown 
+                state={dropdown} 
+                setState={setDropdown} 
+                items={["Option 1", "Option 2", "Option 3"]}
+                boxWidth={150}
+                boxHeight={40}
+                boxStyle={{backgroundColor: "orange"}}
+                iconComponent={<Image style={{width: 20, height: 20}} source={{uri: "https://cdn1.iconfinder.com/data/icons/arrow-outline-6/32/Arrow_Icon_Set_4-512.png"}}/>}
+            />
 
             {/* Really shouldn't be using default buttons for anything */}
-            <Button
-                title="Save"
-                onPress={() => {navigation.navigate("Home")}}
-            />
+            <TTButton text="Save" onPress={() => navigation.navigate("Home")} buttonStyle={{padding: 12, backgroundColor: "blue", borderRadius: 5}} textStyle={{font: "Comic Sans"}}/>
         </View>
     );
 }

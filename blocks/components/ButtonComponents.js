@@ -2,18 +2,10 @@ import * as React from 'react';
 import { StyleSheet, Animated, Easing, View, Text, Pressable } from 'react-native';
 
 // Animation curves (using references because setState forces a re-render that erases static states)
-const fadeIn = (animated) => {
+const fadeTo = (animated, value) => {
     Animated.timing(animated.current, {
-        toValue: 0.6,
-        duration: 30,
-        easing: Easing.ease,
-        useNativeDriver: true,
-    }).start();
-};
-const fadeOut = (animated) => {
-    Animated.timing(animated.current, {
-        toValue: 1,
-        duration: 30,
+        toValue: value,
+        duration: 60,
         easing: Easing.ease,
         useNativeDriver: true,
     }).start();
@@ -24,13 +16,19 @@ const fadeOut = (animated) => {
 // A button which runs a function when pressed
 const TTButton = (props) => {
     // Animation
-    const opacity = new Animated.Value(1);
-    const opacityRef = React.useRef(opacity);
+    const animated = new Animated.Value(1);
+    const animatedRef = React.useRef(animated);
+
+    const opacity = (animatedRef.current).interpolate({
+        inputRange: [0, 1],
+        outputRange: [0.6, 1],
+    });
 
     // Component
     return (
-        <Pressable onPressIn={() => fadeIn(opacityRef)} onPressOut={() => fadeOut(opacityRef)} onPress={props.onPress}>
-            <Animated.View style={[{opacity: opacityRef.current}, props.buttonStyle]}>
+        <Pressable style={props.overrideStyle} onPressIn={() => fadeTo(animatedRef, 0)} onPressOut={() => fadeTo(animatedRef, 1)} onPress={props.onPress}>
+            <Animated.View style={[{opacity: opacity}, props.buttonStyle]}>
+                {props.iconComponent}
                 <Text style={props.textStyle}>{props.text}</Text>
             </Animated.View>
         </Pressable>
@@ -40,8 +38,13 @@ const TTButton = (props) => {
 // A button which flips its state when pressed, staying on or off
 const TTPushButton = (props) => {
     // Animation
-    const opacity = new Animated.Value(1);
-    const opacityRef = React.useRef(opacity);
+    const animated = new Animated.Value(1);
+    const animatedRef = React.useRef(animated);
+
+    const opacity = (animatedRef.current).interpolate({
+        inputRange: [0, 1],
+        outputRange: [0.6, 1],
+    });
 
     // Support for multiple styles
     const styleChange = () => {
@@ -63,8 +66,8 @@ const TTPushButton = (props) => {
 
     // Component
     return (
-        <Pressable onPress={onPress} onPressIn={() => fadeIn(opacityRef)} onPressOut={() => fadeOut(opacityRef)}>
-            <Animated.View style={[{opacity: opacityRef.current}, styleChange()]}>
+        <Pressable onPress={onPress} onPressIn={() => fadeTo(animatedRef, 0)} onPressOut={() => fadeTo(animatedRef, 1)}>
+            <Animated.View style={[{opacity: opacity}, styleChange()]}>
                 <Text style={props.textStyle}>{(props.pushText && props.state) ? props.pushText : props.text}</Text>
             </Animated.View>
         </Pressable>
