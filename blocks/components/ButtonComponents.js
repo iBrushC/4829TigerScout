@@ -1,14 +1,23 @@
 import * as React from 'react';
 import { StyleSheet, Animated, Easing, View, Text, Pressable } from 'react-native';
 
-// Animation curves (using references because setState forces a re-render that erases static states)
-const fadeTo = (animated, value) => {
+// Reusable animation curve
+const fadeTo = (animated, value, duration) => {
     Animated.timing(animated.current, {
         toValue: value,
-        duration: 60,
+        duration: duration ? duration : 60,
         easing: Easing.ease,
-        useNativeDriver: true,
+        useNativeDriver: false,
     }).start();
+};
+
+const fadeToCallback = (animated, value, callback, duration) => {
+    Animated.timing(animated.current, {
+        toValue: value,
+        duration: duration ? duration : 60,
+        easing: Easing.ease,
+        useNativeDriver: false,
+    }).start(callback);
 };
 
 /* All components are relatively common, so in order to avoid name clashes with other libraries the prefix "TT" (Titanium Tigers) is used */

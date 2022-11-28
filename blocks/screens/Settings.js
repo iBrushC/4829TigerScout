@@ -24,10 +24,16 @@ const Settings = ({route, navigation}) => {
                 placeholder="Scouter Name"
             />
 
-            <TTButton 
-                text="Sample Button!" 
-                buttonStyle={{padding: 12, borderRadius: 5}} 
-                textStyle={{font: "Comic Sans"}}
+            <TTDropdown 
+                state={dropdown} 
+                setState={setDropdown} 
+                items={["Option 1", "Option 2", "Option 3"]}
+                boxWidth={150}
+                boxHeight={40}
+                boxStyle={{backgroundColor: "aqua", padding: 5}}
+                overrideStyle={{margin: 10}}
+                zIndex={5}
+                iconComponent={<Image style={{width: 20, height: 20}} source={{uri: "https://cdn1.iconfinder.com/data/icons/arrow-outline-6/32/Arrow_Icon_Set_4-512.png"}}/>}
             />
             <TTPushButton 
                 text="Currently Not Syncing to Cloud" 
@@ -51,16 +57,6 @@ const Settings = ({route, navigation}) => {
                 setState={setRandomVar} 
                 boxCheckedStyle={{padding: 15, backgroundColor: "green", borderRadius: 15}} 
                 boxUncheckedStyle={{padding: 15, backgroundColor: "red"}}
-            />
-
-            <TTDropdown 
-                state={dropdown} 
-                setState={setDropdown} 
-                items={["Option 1", "Option 2", "Option 3"]}
-                boxWidth={150}
-                boxHeight={40}
-                boxStyle={{backgroundColor: "orange"}}
-                iconComponent={<Image style={{width: 20, height: 20}} source={{uri: "https://cdn1.iconfinder.com/data/icons/arrow-outline-6/32/Arrow_Icon_Set_4-512.png"}}/>}
             />
 
             {/* Really shouldn't be using default buttons for anything */}
