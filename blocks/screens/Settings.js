@@ -29,11 +29,12 @@ const Settings = ({route, navigation}) => {
                 setState={setDropdown} 
                 items={["Option 1", "Option 2", "Option 3"]}
                 boxWidth={150}
-                boxHeight={40}
-                boxStyle={{backgroundColor: "aqua", padding: 5}}
+                boxHeight={50}
+                boxStyle={{backgroundColor: "white", borderWidth: 2, borderRadius: 9}}
+                textStyle={{fontFamily: "GeoSans"}}
                 overrideStyle={{margin: 10}}
                 zIndex={5}
-                iconComponent={<Image style={{width: 20, height: 20}} source={{uri: "https://cdn1.iconfinder.com/data/icons/arrow-outline-6/32/Arrow_Icon_Set_4-512.png"}}/>}
+                iconComponent={<Image style={{width: 20, height: 20, marginRight: -15, marginLeft: -10}} source={{uri: "https://cdn1.iconfinder.com/data/icons/arrow-outline-6/32/Arrow_Icon_Set_4-512.png"}}/>}
             />
             <TTPushButton 
                 text="Currently Not Syncing to Cloud" 

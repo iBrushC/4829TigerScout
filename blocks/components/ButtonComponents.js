@@ -89,7 +89,7 @@ const TTSimpleCheckbox = (props) => {
         if (props.onPress) {
             props.onPress()
         }
-        if ((props.state !== null) && (props.setState !== null)) {
+        if ((props.state != null) && (props.setState != null)) {
             props.setState(!props.state);
         }
     }

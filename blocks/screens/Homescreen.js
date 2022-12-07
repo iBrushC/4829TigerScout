@@ -11,11 +11,11 @@ import { TTButton } from '../components/ButtonComponents';
 // Main function
 const Homescreen = ({route, navigation}) => {
     return (
-        <View style={globalConatinerStyles.container}>
+        <View style={globalConatinerStyles.centerContainer}>
             {/* Background */}
             <LinearGradient
                 colors={['#2A3638F0', '#3E474321']}
-                style={globalConatinerStyles.background}
+                style={globalConatinerStyles.fullscreenBackground}
             />
             
             {/* Scout */}
