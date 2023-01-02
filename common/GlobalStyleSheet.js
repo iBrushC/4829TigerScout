@@ -86,6 +86,25 @@ const globalButtonStyles = StyleSheet.create({
         shadowOpacity: 0.33,
         shadowRadius: 7,
     },
+    matchKeyButton: {
+        // Spacing and positioning
+        width: "90%",
+
+        padding: 2*vw,
+        margin: 1*vh,
+
+        alignSelf: "center",
+        alignItems: "center",
+        justifyContent: "center",
+
+        borderRadius: 2*vw,
+
+        // Color
+        backgroundColor: "#EAE7E4",
+        shadowColor: "#AE8848",
+        shadowOpacity: 0.33,
+        shadowRadius: 7,
+    },
 });
 
 const globalInputStyles = StyleSheet.create({
@@ -137,6 +156,15 @@ const globalTextStyles = StyleSheet.create({
 
         // Color
         color: "#FFFFFF",
+    },
+    matchKeyText: {
+        // Formatting
+        fontFamily: "LGC", 
+        fontSize: 18,
+        letterSpacing: 1,
+
+        // Color
+        color: "#3E4743",
     }
 })
 

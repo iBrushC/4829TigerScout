@@ -8,7 +8,7 @@ import { vh, vw } from '../../common/Constants';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { TTCounterInput, TTDropdown, TTNumberInput, TTTextInput } from '../components/InputComponents';
-import { serializeData, deserializeData } from '../../common/LocalStorage'
+import { serializeData, deserializeData, compressData, decompressData, saveMatchData, loadMatchData } from '../../common/LocalStorage'
 
 // Main function
 const ScoutTeam = ({route, navigation}) => {
@@ -32,6 +32,7 @@ const ScoutTeam = ({route, navigation}) => {
 
     // Serializes the data to a string and saves it
     const saveAndExit = () => {
+        console.log(`Taxi: ${taxi}`);
         const matchData = [
             formatNumericState(teamNumber), // Team number
             formatNumericState(matchNumber), // Match number
@@ -44,9 +45,31 @@ const ScoutTeam = ({route, navigation}) => {
             formatNumericState(goalMisses),
         ];
 
-        const serializedMatchData = serializeData(matchData);
+        // Save data using hash
+        saveMatchData(matchData);
+
         navigation.navigate("Home");
     };
+
+    const loadSavedData = (data) => {
+        setTeamNumber(data[0].toString());
+        setMatchNumber(data[1].toString());
+        setMatchType(matchTypeValues[data[2]]);
+        setTeamColor(teamColorValues[data[3]]);
+        setTaxi(data[4] ? true : false);
+        setAutoScores(data[5].toString());
+        setAutoMisses(data[6].toString());
+        setGoalScores(data[7].toString());
+        setGoalMisses(data[8].toString());
+    }
+
+    React.useEffect(() => {
+        if (route?.params?.dataKey) {
+            loadMatchData(route.params.dataKey)
+                .then(loadSavedData)
+                .catch(e => {console.error(e)});
+        }
+    }, [])
 
     return (
         <View style={globalConatinerStyles.topContainer}>
