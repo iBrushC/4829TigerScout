@@ -66,12 +66,12 @@ const deserializeData = (data) => {
 
 // Compresses data using LZString
 const compressData = (stringData) => {
-    return LZString.compress(stringData);
+    return LZString.compressToUTF16(stringData);
 }
 
 // Decompresses data using LZString
 const decompressData = (compressedData) => {
-    return LZString.decompress(compressedData);
+    return LZString.decompressFromUTF16(compressedData);
 }
 
 // Stores data at a key. Returns false if there there was an error, returns true otherwise.
@@ -120,13 +120,16 @@ const deleteMultipleMatches = async (keys) => {
 
 // Takes a list of values and saves it according to conventions. Returns false if there was an error, returns true otherwise
 const saveMatchData = async (data) => {
+    console.log(`Data In: ${data}`)
     const matchTypeValues = ["Practice", "Qualifiers", "Finals"]; // Probablu should be stored elsewhere
 
     const key = `@MD${data[0]}-${matchTypeValues[data[2]]}-${data[1]}`;
     const serializedData = serializeData(data);
+    console.log(`Serialized Data: ${serializedData}`)
     const compressedData = compressData(serializedData);
+    console.log(`Compressed Data: ${compressedData}`)
 
-    return writeData(compressedData, key);
+    return await writeData(compressedData, key);
 };
 
 // Reads the data stored at a key value. Returns false if there was an error, returns list of data otherwise.
