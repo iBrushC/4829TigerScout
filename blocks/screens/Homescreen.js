@@ -5,18 +5,17 @@ import { LinearGradient } from 'expo-linear-gradient'; // Literally just to get 
 
 // Component imports
 import { vh, vw } from '../../common/Constants';
+import { CS } from '../../common/ColorScheme';
 import { globalButtonStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton } from '../components/ButtonComponents';
+import { TTGradient } from '../components/ExtraComponents';
 
 // Main function
 const Homescreen = ({route, navigation}) => {
     return (
         <View style={globalConatinerStyles.centerContainer}>
             {/* Background */}
-            <LinearGradient
-                colors={['#2A3638F0', '#3E474321']}
-                style={globalConatinerStyles.fullscreenBackground}
-            />
+            <TTGradient/>
             
             {/* Scout */}
             <TTButton 
@@ -24,7 +23,7 @@ const Homescreen = ({route, navigation}) => {
                 buttonStyle={[
                     globalButtonStyles.primaryButton,
                     {   
-                        borderRadius: 5 * vw,
+                        borderRadius: 2 * vw,
                         height: 50 * vh,
                     }
                 ]}
@@ -32,7 +31,7 @@ const Homescreen = ({route, navigation}) => {
                     globalTextStyles.primaryText,
                     {
                         fontSize: 60,
-                        color: "#FFFFFF"
+                        color: CS.light1
                     }
                 ]}
                 onPress= {() => navigation.navigate("ScoutTeam", {})}
@@ -44,7 +43,7 @@ const Homescreen = ({route, navigation}) => {
                 buttonStyle={[
                     globalButtonStyles.secondaryButton,
                     {   
-                        borderRadius: 5 * vw,
+                        borderRadius: 2 * vw,
                         height: 10 * vh,
                     }
                 ]}
@@ -52,7 +51,7 @@ const Homescreen = ({route, navigation}) => {
                     globalTextStyles.primaryText,
                     {
                         fontSize: 42,
-                        color: "#FFFFFF"
+                        color: CS.light1
                     }
                 ]}
                 onPress= {() => navigation.navigate("LocalData", {})}
@@ -64,7 +63,7 @@ const Homescreen = ({route, navigation}) => {
                 buttonStyle={[
                     globalButtonStyles.secondaryButton,
                     {   
-                        borderRadius: 5 * vw,
+                        borderRadius: 2 * vw,
                         height: 10 * vh,
                     }
                 ]}
@@ -72,7 +71,7 @@ const Homescreen = ({route, navigation}) => {
                     globalTextStyles.primaryText,
                     {
                         fontSize: 42,
-                        color: "#FFFFFF"
+                        color: CS.light1
                     }
                 ]}
                 onPress= {() => navigation.navigate("CloudData", {})}
@@ -84,7 +83,7 @@ const Homescreen = ({route, navigation}) => {
                 buttonStyle={[
                     globalButtonStyles.secondaryButton,
                     {   
-                        borderRadius: 5 * vw,
+                        borderRadius: 2 * vw,
                         height: 10 * vh,
                     }
                 ]}
@@ -92,7 +91,7 @@ const Homescreen = ({route, navigation}) => {
                     globalTextStyles.primaryText,
                     {
                         fontSize: 42,
-                        color: "#FFFFFF"
+                        color: CS.light1
                     }
                 ]}
                 onPress= {() => navigation.navigate("Settings", {})}

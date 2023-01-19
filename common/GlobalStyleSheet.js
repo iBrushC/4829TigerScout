@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { vh, vw } from './Constants';
+import { CS } from './ColorScheme';
 
 // Global stylesheet for frequently used styles like backgrounds, buttons, text, etc.. Also provides a base for other styles to build on
 
@@ -17,13 +18,10 @@ const globalButtonStyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
 
-        borderRadius: 2*vw,
+        borderRadius: 1*vw,
 
         // Color
-        backgroundColor: "#E17512",
-        shadowColor: "#BF6410",
-        shadowOpacity: 0.33,
-        shadowRadius: 22,
+        backgroundColor: CS.accent2,
     },
     secondaryButton: {
         // Spacing and positioning
@@ -36,13 +34,10 @@ const globalButtonStyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
 
-        borderRadius: 2*vw,
+        borderRadius: 1*vw,
 
         // Color
-        backgroundColor: "#D07E32",
-        shadowColor: "#BF6410",
-        shadowOpacity: 0.33,
-        shadowRadius: 7,
+        backgroundColor: CS.accent1,
     },
     topCounterButton: {
         // Spacing and positioning
@@ -60,10 +55,7 @@ const globalButtonStyles = StyleSheet.create({
         borderBottomRightRadius: 1,
 
         // Color
-        backgroundColor: "#D07E32",
-        shadowColor: "#BF6410",
-        shadowOpacity: 0.33,
-        shadowRadius: 7,
+        backgroundColor: CS.accent1,
     },
     bottomCounterButton: {
         // Spacing and positioning
@@ -81,10 +73,7 @@ const globalButtonStyles = StyleSheet.create({
         borderTopRightRadius: 1,
 
         // Color
-        backgroundColor: "#D07E32",
-        shadowColor: "#BF6410",
-        shadowOpacity: 0.33,
-        shadowRadius: 7,
+        backgroundColor: CS.accent1,
     },
     matchKeyButton: {
         // Spacing and positioning
@@ -97,14 +86,39 @@ const globalButtonStyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
 
-        borderRadius: 2*vw,
+        borderRadius: 1*vw,
 
         // Color
-        backgroundColor: "#EAE7E4",
-        shadowColor: "#AE8848",
-        shadowOpacity: 0.33,
-        shadowRadius: 7,
+        backgroundColor: CS.light1,
     },
+    checkboxUncheckedStyle: {
+        // Spacing and positioning
+        width: 7*vw, 
+        height: 7*vw, 
+        margin: 1*vh, 
+
+        // Border
+        borderWidth: 3, 
+        borderRadius: 3, 
+        borderColor: CS.light1,
+
+        // Color
+        backgroundColor: `${CS.light1}10`, 
+    },
+    checkboxCheckedStyle: {
+        // Spacing and positioning
+        width: 7*vw, 
+        height: 7*vw, 
+        margin: 1*vh,
+        
+        // Border
+        borderWidth: 3, 
+        borderRadius: 3, 
+        borderColor: CS.light1,
+
+        // Color
+        backgroundColor: CS.accent1, 
+    }
 });
 
 const globalInputStyles = StyleSheet.create({
@@ -116,8 +130,8 @@ const globalInputStyles = StyleSheet.create({
         borderWidth: 3, 
 
         // Color
-        backgroundColor: "#3D4A4D", 
-        borderColor: "white",
+        backgroundColor: CS.dark3, 
+        borderColor: CS.light1,
     },
     dropdownInput: {
         // Spacing and positioning
@@ -126,8 +140,8 @@ const globalInputStyles = StyleSheet.create({
         borderWidth: 3, 
 
         // Color
-        backgroundColor: "#3D4A4D", 
-        borderColor: "white",
+        backgroundColor: CS.dark3, 
+        borderColor: CS.light1,
     }
 });
 
@@ -138,7 +152,7 @@ const globalTextStyles = StyleSheet.create({
         fontSize: 48,
 
         // Color
-        color: "#FFFFFFFF"
+        color: CS.light1
     },
     secondaryText: {
         // Formatting
@@ -146,7 +160,7 @@ const globalTextStyles = StyleSheet.create({
         fontSize: 36,
 
         // Color
-        color: "#FFFFFF50"
+        color: CS.light1
     },
     labelText: {
         // Formatting
@@ -155,7 +169,7 @@ const globalTextStyles = StyleSheet.create({
         letterSpacing: -1,
 
         // Color
-        color: "#FFFFFF",
+        color: CS.light1,
     },
     matchKeyText: {
         // Formatting
@@ -164,7 +178,7 @@ const globalTextStyles = StyleSheet.create({
         letterSpacing: 1,
 
         // Color
-        color: "#3E4743",
+        color: CS.dark2,
     }
 })
 
@@ -172,12 +186,12 @@ const globalConatinerStyles = StyleSheet.create({
     // General containers
     centerContainer: {
         flex: 1,
-        backgroundColor: "#1E1E1E",
+        backgroundColor: CS.dark1,
         justifyContent: "center",
     },
     topContainer: {
         flex: 1,
-        backgroundColor: "#1E1E1E",
+        backgroundColor: CS.dark1,
     },
     fullscreenBackground: {
         position: "absolute",
@@ -187,7 +201,7 @@ const globalConatinerStyles = StyleSheet.create({
     },
     viewBackground: {
         position: "absolute",
-        top: 0,
+        alignSelf: "center",
         width: "100%",
         height: "100%",
     },
@@ -201,6 +215,13 @@ const globalConatinerStyles = StyleSheet.create({
         flex: 1,
         flexDirection: "row"
     },
+    popupContainer: {
+        flexDirection: "column",
+        justifyContent: "center",
+        width: "100%",
+        padding: 1*vh,
+        borderRadius: 1*vw,
+    }
 });
 
 // Exports

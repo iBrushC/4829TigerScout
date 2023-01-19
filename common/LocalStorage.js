@@ -16,52 +16,18 @@ import LZString from 'lz-string';
 
 // Constants
 const settingsKey = "@settingsKey";
+const delimiter = String.fromCharCode(29);
 
 // Take a list of data and packs it into a string. Only works with lists numbers and strings
 // Example: [90, 4829] -> "90 4829"
 const serializeData = (data) => {
-    let output = "";
-    for (item of data) {
-        if (typeof item == 'string') {
-            output += `"${item}" `;
-        } else {
-            output += `${item.toString()} `;
-        }
-    }
-
-    return output;
+    return data.join(delimiter);
 };
 
 // Reads a string of separated values into an array. Only outputs numbers and strings
 // Example: "90 4829" -> [90, 4829]
-const deserializeData = (data) => {
-    let output = [];
-
-    let lastIndex = 0;
-    let isString = false;
-
-    // Simple parser
-    for (let i = 0; i < data.length; i++) {
-        const char = data.charAt(i);
-        
-        if (char == ' ' && !isString) {
-            output.push(Number(data.slice(lastIndex, i)));
-            lastIndex = i;
-        }
-        if (char == '"') {
-            if (isString) {
-                output.push(data.slice(lastIndex, i));
-                i++;
-                lastIndex = i;
-            } else {
-                lastIndex = i + 1;
-            }
-
-            isString = !isString;
-        }
-    }
-    
-    return output;
+const deserializeData = (data) => {    
+    return data.split(delimiter);
 };
 
 // Compresses data using LZString
@@ -120,30 +86,29 @@ const deleteMultipleMatches = async (keys) => {
 
 // Takes a list of values and saves it according to conventions. Returns false if there was an error, returns true otherwise
 const saveMatchData = async (data) => {
-    console.log(`Data In: ${data}`)
-    const matchTypeValues = ["Practice", "Qualifiers", "Finals"]; // Probablu should be stored elsewhere
+    const matchTypeValues = ["Practice", "Qualifiers", "Finals"]; // Probably should be stored elsewhere
 
     const key = `@MD${data[0]}-${matchTypeValues[data[2]]}-${data[1]}`;
     const serializedData = serializeData(data);
-    console.log(`Serialized Data: ${serializedData}`)
-    const compressedData = compressData(serializedData);
-    console.log(`Compressed Data: ${compressedData}`)
-
-    return await writeData(compressedData, key);
+    return await writeData(serializedData, key);
 };
 
 // Reads the data stored at a key value. Returns false if there was an error, returns list of data otherwise.
 const loadMatchData = async (key) => {
-    const compressedData = await readData(key);
+    const data = await readData(key);
     if (compressData == false) {
         return false;
     } else {
-        const decompressedData = decompressData(compressedData);
-        const listData = deserializeData(decompressedData);
-    
+        const listData = deserializeData(data);
         return listData;
     }
 };
+
+// Helper function to only keep match keys
+const removeNonMatchKeys = (loadedKeys) => {
+    const filtered = loadedKeys.filter((keyName) => {return keyName.slice(0, 3) == "@MD"});
+    return filtered;
+}
 
 // Exports
 export { 
@@ -156,4 +121,5 @@ export {
     loadMatchData,
     deleteData,
     deleteMultipleMatches,
+    removeNonMatchKeys,
 }

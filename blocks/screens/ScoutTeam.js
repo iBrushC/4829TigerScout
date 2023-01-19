@@ -9,6 +9,8 @@ import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatine
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { TTCounterInput, TTDropdown, TTNumberInput, TTTextInput } from '../components/InputComponents';
 import { serializeData, deserializeData, compressData, decompressData, saveMatchData, loadMatchData } from '../../common/LocalStorage'
+import { TTGradient } from '../components/ExtraComponents';
+import { CS } from '../../common/ColorScheme';
 
 // Main function
 const ScoutTeam = ({route, navigation}) => {
@@ -73,45 +75,42 @@ const ScoutTeam = ({route, navigation}) => {
         ];
 
         // Save data using hash
-        await saveMatchData(matchData);
-
-        navigation.navigate("Home");
+        await saveMatchData(matchData)
+            .then(() => {navigation.navigate("Home")})
+            .catch(e => {console.error(`Error Saving Data: ${e}`)});
     };
 
     const loadSavedData = (data) => {
-        console.log(data);
         // Pre Round
-        setTeamNumber(data[0].toString());
-        setMatchNumber(data[1].toString());
+        setTeamNumber(data[0]);
+        setMatchNumber(data[1]);
         setMatchType(matchTypeValues[data[2]]);
         setTeamColor(teamColorValues[data[3]]);
 
         // Auto
-        setTaxi(data[4] ? true : false);
-        setAutoDocked(data[5] ? true : false);
-        setAutoEngaged(data[6] ? true : false);
-        setAutoHigh(data[7].toString());
-        setAutoMid(data[8].toString());
-        setAutoLow(data[9].toString());
-        setAutoMisses(data[10].toString());
+        setTaxi(Number(data[4]) ? true : false);
+        setAutoDocked(Number(data[5]) ? true : false);
+        setAutoEngaged(Number(data[6]) ? true : false);
+        setAutoHigh(data[7]);
+        setAutoMid(data[8]);
+        setAutoLow(data[9]);
+        setAutoMisses(data[10]);
 
         // Teleop
-        setTeleHigh(data[11].toString());
-        setTeleMid(data[12].toString());
-        setTeleLow(data[13].toString());
-        setTeleMisses(data[14].toString());
-        setTeleDocked(data[15] ? true : false);
-        setTeleEngaged(data[16] ? true : false);
+        setTeleHigh(data[11]);
+        setTeleMid(data[12]);
+        setTeleLow(data[13]);
+        setTeleMisses(data[14]);
+        setTeleDocked(Number(data[15]) ? true : false);
+        setTeleEngaged(Number(data[16]) ? true : false);
 
         // After Round
         setComments(data[17]);
     }
 
     React.useEffect(() => {
-        if (route?.params?.dataKey) {
-            loadMatchData(route.params.dataKey)
-                .then(loadSavedData)
-                .catch(e => {console.error(`There was an error loading match data: ${e}`)});
+        if (route?.params?.matchData) {
+            loadSavedData(route.params.matchData);
         }
     }, [])
 
@@ -119,83 +118,79 @@ const ScoutTeam = ({route, navigation}) => {
 
     return (
         <View style={globalConatinerStyles.topContainer}>
-            <LinearGradient
-                colors={['#2A3638F0', '#3E474321']}
-                style={globalConatinerStyles.fullscreenBackground}
-            />
+        <TTGradient/>
 
             {/* All scouting settings go in the scroll view */}
             <KeyboardAvoidingView style={{flex: 1}} behavior="height">
             <ScrollView keyboardShouldPersistTaps='handled' ref={scrollRef}>
-                <Text style={{...globalTextStyles.primaryText, fontSize: 24, marginTop: "7%", marginBottom: "2%", alignSelf: "center"}}>Pre-Round</Text>
+                <View style={{width: "100%", alignItems: "center", height: 35*vh}}>
+                    <Text style={{...globalTextStyles.primaryText, fontSize: 24, marginTop: "7%", marginBottom: "2%", alignSelf: "center"}}>Pre-Round</Text>
 
-                <View style={{...globalConatinerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 6}}>
-                    {/* Team number */}
-                    <TTNumberInput
-                        state={teamNumber}
-                        setState={setTeamNumber}
-                        stateMax={9999}
-                        maxLength={4}
-                        placeholder="Team Number"
-                        placeholderTextColor="#FFFFFF50"
-                        style={[
-                            {...globalInputStyles.numberInput, width: "45%", height: 50},
-                            {fontFamily: "Bebas", fontSize: 24, color: "#FFFFFF"}
-                        ]}
-                    />
-                    {/* Team Color */}
-                    <TTDropdown 
-                        state={teamColor} 
-                        setState={setTeamColor} 
-                        items={teamColorValues}
-                        boxWidth={150}
-                        boxHeight={50}
-                        boxStyle={globalInputStyles.dropdownInput}
-                        textStyle={globalTextStyles.labelText}
-                        overrideStyle={{margin: 10}}
-                        zIndex={5}
-                    />
+                    <View style={{...globalConatinerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 6}}>
+                        {/* Team number */}
+                        <TTNumberInput
+                            state={teamNumber}
+                            setState={setTeamNumber}
+                            stateMax={9999}
+                            maxLength={4}
+                            placeholder="Team Number"
+                            placeholderTextColor={`${CS.light1}50`}
+                            style={[
+                                {...globalInputStyles.numberInput, width: "45%", height: 50},
+                                globalTextStyles.labelText
+                            ]}
+                        />
+                        {/* Team Color */}
+                        <TTDropdown 
+                            state={teamColor} 
+                            setState={setTeamColor} 
+                            items={teamColorValues}
+                            boxWidth={150}
+                            boxHeight={50}
+                            boxStyle={globalInputStyles.dropdownInput}
+                            textStyle={globalTextStyles.labelText}
+                            overrideStyle={{margin: 10}}
+                            zIndex={5}
+                        />
+                    </View>
+
+                    {/* Match type and number */}
+                    <View style={{...globalConatinerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 5}}>
+                        <TTDropdown 
+                            state={matchType} 
+                            setState={setMatchType} 
+                            items={matchTypeValues}
+                            boxWidth={150}
+                            boxHeight={50}
+                            boxStyle={globalInputStyles.dropdownInput}
+                            textStyle={globalTextStyles.labelText}
+                            overrideStyle={{margin: 10}}
+                            zIndex={5}
+                        />
+                        <TTNumberInput
+                            state={matchNumber}
+                            setState={setMatchNumber}
+                            maxLength={3}
+                            placeholder="Match Number"
+                            placeholderTextColor={`${CS.light1}50`}
+                            style={[
+                                {...globalInputStyles.numberInput, width: "45%", height: 50},
+                                globalTextStyles.labelText
+                            ]}
+                        />
+                    </View>
+                    
+                    {/* Rudamentary spacer */}
+                    <View style={{marginBottom: 5*vh}}/> 
                 </View>
 
-                {/* Match type and number */}
-                <View style={{...globalConatinerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 5}}>
-                    <TTDropdown 
-                        state={matchType} 
-                        setState={setMatchType} 
-                        items={matchTypeValues}
-                        boxWidth={150}
-                        boxHeight={50}
-                        boxStyle={globalInputStyles.dropdownInput}
-                        textStyle={globalTextStyles.labelText}
-                        overrideStyle={{margin: 10}}
-                        zIndex={5}
-                    />
-                    <TTNumberInput
-                        state={matchNumber}
-                        setState={setMatchNumber}
-                        maxLength={3}
-                        placeholder="Match Number"
-                        placeholderTextColor="#FFFFFF50"
-                        style={[
-                            {...globalInputStyles.numberInput, width: "45%", height: 50},
-                            globalTextStyles.labelText
-                        ]}
-                    />
-                </View>
-                
-                {/* Rudamentary spacer */}
-                <View style={{marginBottom: "5%"}}/> 
-                
                 {/* 
                 
                 AUTO 
                 
                 */}
                 <View style={{width: "100%", alignItems: "center", height: 60*vh}}>
-                    <LinearGradient
-                        colors={['#EEFFFA35', '#00000000']}
-                        style={{...globalConatinerStyles.viewBackground, borderTopLeftRadius: 10, borderTopRightRadius: 10}}
-                    />
+                    <TTGradient/>
 
                     {/* Might also make title a block (?) */}
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, margin: 15}}>Auto</Text>
@@ -270,8 +265,8 @@ const ScoutTeam = ({route, navigation}) => {
                                 text="Taxi?" 
                                 overallStyle={{height: "100%", alignSelf: "center"}}
                                 textStyle={{...globalTextStyles.labelText, fontSize: 14}}
-                                boxUncheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#FFFFFF10", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
-                                boxCheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#D07E32", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
+                                boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
+                                boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                             />
                         {/* Docked */}
                         <TTSimpleCheckbox 
@@ -280,8 +275,8 @@ const ScoutTeam = ({route, navigation}) => {
                                 text="Docked?" 
                                 overallStyle={{height: "100%", alignSelf: "center"}}
                                 textStyle={{...globalTextStyles.labelText, fontSize: 14}}
-                                boxUncheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#FFFFFF10", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
-                                boxCheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#D07E32", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
+                                boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
+                                boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                             />
                         {/* Engaged */}
                         <TTSimpleCheckbox 
@@ -290,14 +285,14 @@ const ScoutTeam = ({route, navigation}) => {
                                 text="Engaged?" 
                                 overallStyle={{height: "100%", alignSelf: "center"}}
                                 textStyle={{...globalTextStyles.labelText, fontSize: 14}}
-                                boxUncheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#FFFFFF10", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
-                                boxCheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#D07E32", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
+                                boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
+                                boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                             />
                     </View>
                 </View>
 
                 {/* Rudamentary spacer */}
-                <View style={{marginBottom: "5%"}}/> 
+                {/* <View style={{marginBottom: 1*vh}}/>  */}
                 
                 {/* 
                 
@@ -305,10 +300,7 @@ const ScoutTeam = ({route, navigation}) => {
                 
                 */}
                 <View style={{width: "100%", alignItems: "center", height: 50*vh}}>
-                    <LinearGradient
-                        colors={['#EEFFFA35', '#00000000']}
-                        style={{...globalConatinerStyles.viewBackground, borderTopLeftRadius: 10, borderTopRightRadius: 10}}
-                    />
+                    <TTGradient/>
 
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, margin: 15}}>Teleop</Text>
                     
@@ -374,9 +366,6 @@ const ScoutTeam = ({route, navigation}) => {
                         </View>
                     </View>
                 </View>
-
-                {/* Rudamentary spacer */}
-                <View style={{marginBottom: "5%"}}/> 
                 
                 {/* 
                 
@@ -384,10 +373,7 @@ const ScoutTeam = ({route, navigation}) => {
                 
                 */}
                 <View style={{width: "100%", alignItems: "center", height: 50*vh}}>
-                    <LinearGradient
-                        colors={['#EEFFFA35', '#00000000']}
-                        style={{...globalConatinerStyles.viewBackground, borderTopLeftRadius: 10, borderTopRightRadius: 10}}
-                    />
+                    <TTGradient/>
 
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, margin: 15}}>Endgame</Text>
                     
@@ -398,8 +384,8 @@ const ScoutTeam = ({route, navigation}) => {
                                 text="Docked?" 
                                 overallStyle={{height: "100%", alignSelf: "center"}}
                                 textStyle={{...globalTextStyles.labelText}}
-                                boxUncheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#FFFFFF10", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
-                                boxCheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#D07E32", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
+                                boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
+                                boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                             />
                         <TTSimpleCheckbox 
                                 state={teleEngaged}
@@ -407,8 +393,8 @@ const ScoutTeam = ({route, navigation}) => {
                                 text="Engaged?" 
                                 overallStyle={{height: "100%", alignSelf: "center"}}
                                 textStyle={{...globalTextStyles.labelText}}
-                                boxUncheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#FFFFFF10", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
-                                boxCheckedStyle={{width: 7*vw, height: 7*vw, margin: "5%", backgroundColor: "#D07E32", borderWidth: 3, borderRadius: 3, borderColor: "white"}}
+                                boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
+                                boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                             />
                     </View>
                     <View style={{...globalConatinerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15,}}>
@@ -416,17 +402,20 @@ const ScoutTeam = ({route, navigation}) => {
                                 state={comments}
                                 setState={setComments}
                                 placeholder="Comments (25 characters)"
-                                placeholderTextColor="#FFFFFF50"
+                                placeholderTextColor={`${CS.light1}50`}
                                 multiline={true}
                                 maxLength={25}
                                 numberOfLines={4}
                                 onFocus={() => {scrollRef.current.scrollToEnd()}}
                                 style={[
                                     {...globalInputStyles.numberInput, width: "90%", height: "90%"},
-                                    {fontFamily: "Bebas", fontSize: 24, color: "#FFFFFF"}
+                                    globalTextStyles.labelText
                                 ]}
                             />
                     </View>
+
+                    {/* Rudamentary spacer */}
+                    <View style={{marginBottom: 5*vh}}/> 
                 </View>
                 
                 <View style={{...globalConatinerStyles.centerContainer, backgroundColor: "#00000000"}}>
@@ -443,16 +432,6 @@ const ScoutTeam = ({route, navigation}) => {
         </View>
     );
 }
-
-// Stylesheet
-const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-});
 
 // Exports
 export default ScoutTeam;

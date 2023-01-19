@@ -8,19 +8,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { vh, vw } from '../../common/Constants';
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
-import { deleteMultipleMatches } from '../../common/LocalStorage';
+import { deleteMultipleMatches, loadMatchData, removeNonMatchKeys } from '../../common/LocalStorage';
+import { TTGradient } from '../components/ExtraComponents';
+import { CS } from '../../common/ColorScheme';
 
 // Component imports
 
 
 // Main function
 const LocalData = ({route, navigation}) => {
-	// Helper function to only keep match keys
-	const removeNonMatchKeys = (loadedKeys) => {
-		const filtered = loadedKeys.filter((keyName) => {return keyName.slice(0, 3) == "@MD"});
-		return filtered;
-	}
-
 	const [matchKeys, setMatchKeys] = React.useState([]);
 
 	const loadKeys = () => {
@@ -32,18 +28,20 @@ const LocalData = ({route, navigation}) => {
 			.catch(e => {console.error(e)});
 	};
 
+	// Function to make sure people want to delete keys before actually doing it
+	const checkDeleteKeys = () => {
+
+	}
+
 	// Loads all keys and removes any that don't contain matchdata
 	React.useEffect(loadKeys, []);
 
     return (
         <View style={globalConatinerStyles.topContainer}>
-			<LinearGradient
-                colors={['#2A3638F0', '#3E474321']}
-                style={globalConatinerStyles.fullscreenBackground}
-            />
+			<TTGradient/>
 
 			{/* Match buttons */}
-			<ScrollView style={{paddingTop: "5%"}}>
+			<ScrollView style={{paddingTop: 2*vh}}>
 				{
 					matchKeys.map((keyName, i) => (
 						<View key={i}>
@@ -51,30 +49,37 @@ const LocalData = ({route, navigation}) => {
 								text={keyName.slice(3)}
 								buttonStyle={{...globalButtonStyles.matchKeyButton, width: "90%", margin: 1 * vh}}
 								textStyle={{...globalTextStyles.matchKeyText, margin: 3}}
-								onPress={() => {navigation.navigate("ScoutTeam", {dataKey: keyName})}}
+								onPress={async () => {
+									const matchData = await loadMatchData(keyName)
+									navigation.navigate("ScoutTeam", {matchData: matchData})
+								}}
 							/>
 							
 						</View>
 					))
 				}
+				<View style={{marginTop: 1*vh}}></View>
+				{matchKeys.length > 0 && <TTButton
+					text="Delete Local Data"
+					buttonStyle={{...globalButtonStyles.secondaryButton, width: "90%", margin: 1 * vh}}
+					textStyle={{...globalTextStyles.primaryText, fontSize: 16}}
+					onPress={() => {
+						// Should probably add an "are you sure?" alert
+						deleteMultipleMatches(matchKeys)
+							.then(loadKeys)
+							.catch(e => {console.error(e)});
+					}}
+				/>}
 			</ScrollView>
 
 			{/* Bottom button */}
-			<View style={{backgroundColor: "#00000000", paddingTop: "2%", paddingBottom: "2%"}}>
-				<LinearGradient
-					colors={['#2A3638F0', '#3E474321']}
-					style={globalConatinerStyles.fullscreenBackground}
-				/>
+			<View style={{backgroundColor: CS.transparent, paddingTop: "2%", paddingBottom: "2%"}}>
+				<TTGradient/>
 				<TTButton
-					text="Delete Local Data"
-					overrideStyle={{}}
+					text="Upload Data To Cloud"
 					buttonStyle={{...globalButtonStyles.primaryButton, width: "90%", margin: 1 * vh}}
 					textStyle={{...globalTextStyles.primaryText, fontSize: 24}}
-					onPress={() => {
-						// Should probably add an "are you sure?" alert
-						deleteMultipleMatches(matchKeys).catch(e => {console.error(e)});
-						loadKeys();
-					}}
+					onPress={() => {}}
 				/>
 			</View>
         </View>

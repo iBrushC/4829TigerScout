@@ -3,6 +3,7 @@ import * as React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 // Component imports
+import { uploadStringToCloud, readStringFromCloud } from '../../common/CloudStorage';
 
 
 // Main function
