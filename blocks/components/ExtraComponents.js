@@ -7,7 +7,7 @@ import { StyleSheet, Animated, Easing, View, Text, Pressable } from 'react-nativ
 // Component Imports
 import { TTButton } from './ButtonComponents';
 import { vh, vw } from '../../common/Constants';
-import { CS } from '../../common/ColorScheme';
+import { ColorScheme as CS } from '../../common/ColorScheme';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
 
 const TTGradient = (props) => {
@@ -47,15 +47,38 @@ const TTAlert = (props) => {
                 />
             </View>
         </Modal>
-    )
+    );
 };
 
 const TTWarning = (props) => {
-    <Modal>
-        <View style={{ flex: 1 }}>
+    const warningTitle = props.title ? props.title : "Warning";
+    const warningText = props.mainText ? props.mainText : "Something happened!";
+    const acceptText = props.acceptText ? props.acceptText : "Ok";
 
-        </View>
-    </Modal>
+    const setVisibility = () => {
+        if (props.setState != null && props.state != null) {
+            props.setState(!props.state);
+        }
+    }
+
+    return (
+        <Modal isVisible={props.state != null ? props.state : false}>
+            <View style={[{...globalConatinerStyles.popupContainer, backgroundColor: CS.accent3}, props?.overrideViewStyle]}>
+                <Text style={[{...globalTextStyles.primaryText, color: CS.light1, alignSelf: "center"}, props?.overrideTitleStyle]}>
+                    {warningTitle}
+                </Text>
+                <Text style={[{...globalTextStyles.labelText, color: CS.light1, alignSelf: "center"}, props?.overrideMainTextStyle]}>
+                    {warningText}
+                </Text>
+                <TTButton
+                    text={acceptText}
+                    buttonStyle={[{...globalButtonStyles.primaryButton, backgroundColor: CS.light2, width: "90%", margin: 2 * vh}, props?.overrideButtonStyle]}
+                    textStyle={[{...globalTextStyles.primaryText, color: CS.dark1, fontSize: 24, margin: 1}, props?.overrideTitleStyle]}
+                    onPress={setVisibility}
+                />
+            </View>
+        </Modal>
+    );
 };
 
 const TTPoll = (props) => {

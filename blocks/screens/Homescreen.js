@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient'; // Literally just to get 
 
 // Component imports
 import { vh, vw } from '../../common/Constants';
-import { CS } from '../../common/ColorScheme';
+import { ColorScheme as CS } from '../../common/ColorScheme';
 import { globalButtonStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton } from '../components/ButtonComponents';
 import { TTGradient } from '../components/ExtraComponents';

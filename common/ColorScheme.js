@@ -1,11 +1,15 @@
+// Component imports
+import { loadSettings } from "./LocalStorage";
+
 // Default color scheme so that other teams can easily modify the app to use whatever they want
-const CS = {
+let ColorScheme = {
     // All general colors
     light1: "#FFFFFF",
     light2: "#F7F3E1",
 
     accent1: "#D07E32",
     accent2: "#E17512", 
+    accent3: "#E64D27",
 
     dark1: "#1E1E1E",
     dark2: "#3E4743",
@@ -19,4 +23,4 @@ const CS = {
     transparent: "#00000000",
 };
 
-export { CS };
+export { ColorScheme };

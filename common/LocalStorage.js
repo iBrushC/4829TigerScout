@@ -110,9 +110,25 @@ const removeNonMatchKeys = (loadedKeys) => {
     return filtered;
 }
 
+// Helper function to load settings
+const loadSettings = async () => {
+    const loadedSettings = await readData(settingsKey);
+    if (!loadedSettings) return false;
+
+    // This probably shouldn't even include a try function because it shouldn't accept settings that don't parse correctly
+    try {
+        const parsedSettings = JSON.parse(loadedSettings);
+        return parsedSettings;
+    } catch (e) {
+        return false;
+    }
+}
+
 // Exports
 export { 
-    settingsKey, 
+    settingsKey,
+    readData,
+    writeData,
     serializeData, 
     deserializeData, 
     compressData, 
@@ -122,4 +138,5 @@ export {
     deleteData,
     deleteMultipleMatches,
     removeNonMatchKeys,
+    loadSettings,
 }

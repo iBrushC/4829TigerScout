@@ -1,41 +1,65 @@
 // Library imports
 import * as React from 'react';
+import { getApp } from 'firebase/app';
+import { getStorage } from 'firebase/storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Component Imports
 import { vh, vw } from '../../common/Constants';
+import { TTGradient } from '../components/ExtraComponents';
+import { ColorScheme as CS } from '../../common/ColorScheme';
+import { initializeFirebaseFromSettings, uploadStringToCloud, getAllFilesFromRef } from '../../common/CloudStorage';
+import { deleteMultipleMatches, loadMatchData, removeNonMatchKeys, readData } from '../../common/LocalStorage';
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
-import { deleteMultipleMatches, loadMatchData, removeNonMatchKeys } from '../../common/LocalStorage';
-import { TTGradient } from '../components/ExtraComponents';
-import { CS } from '../../common/ColorScheme';
-
-// Component imports
 
 
 // Main function
 const LocalData = ({route, navigation}) => {
 	const [matchKeys, setMatchKeys] = React.useState([]);
 
-	const loadKeys = () => {
-		AsyncStorage.getAllKeys()
-			.then((loadedKeys) => {
-				const filteredLoadedKeys = removeNonMatchKeys(loadedKeys);
-				setMatchKeys(filteredLoadedKeys);
-			})
-			.catch(e => {console.error(e)});
+    // Gets all the keys from local settings
+	const loadKeys = async () => {
+        try {
+		    const loadedKeys = await AsyncStorage.getAllKeys()
+            const filteredLoadedKeys = removeNonMatchKeys(loadedKeys);
+			setMatchKeys(filteredLoadedKeys);
+        } catch (e) {
+            console.error(e);
+        }
 	};
 
-	// Function to make sure people want to delete keys before actually doing it
-	const checkDeleteKeys = () => {
+    // Upload all the data keys to the cloud
+    const uploadDataToCloud = async () => {
+        const storage = getStorage();
+        if (storage == null) return;
 
-	}
+        for (const keyName of matchKeys) {
+            const filename = `${keyName.slice(3)}.txt`;
+            const fileData = await readData(keyName);
+            if (fileData) {
+                try {
+                    await uploadStringToCloud(storage, fileData, filename);
+                    // !! NEED TO INCLUDE A POPUP TO SHOW THAT IT WAS SUCCESSFUL!
+                } catch (e) {
+                    console.error(`There was an error uploading data to the cloud:\n${e}`);
+                    // !! NEED TO INCLUDE A POPUP TO SHOW THAT IT WAS NOT SUCCESSFUL!
+                }
+            }
+        }
+        
+    }
+
 
 	// Loads all keys and removes any that don't contain matchdata
-	React.useEffect(loadKeys, []);
+	React.useEffect(() => {
+        loadKeys();
+        initializeFirebaseFromSettings();
+    }, []);
 
+    
     return (
         <View style={globalConatinerStyles.topContainer}>
 			<TTGradient/>
@@ -79,7 +103,7 @@ const LocalData = ({route, navigation}) => {
 					text="Upload Data To Cloud"
 					buttonStyle={{...globalButtonStyles.primaryButton, width: "90%", margin: 1 * vh}}
 					textStyle={{...globalTextStyles.primaryText, fontSize: 24}}
-					onPress={() => {}}
+					onPress={() => {uploadDataToCloud()}}
 				/>
 			</View>
         </View>

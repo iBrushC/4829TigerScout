@@ -1,7 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 import { vh, vw } from './Constants';
-import { CS } from './ColorScheme';
+import { ColorScheme as CS } from './ColorScheme';
+
+// ! This should probably have functions returning the styles given the colorscheme
 
 // Global stylesheet for frequently used styles like backgrounds, buttons, text, etc.. Also provides a base for other styles to build on
 

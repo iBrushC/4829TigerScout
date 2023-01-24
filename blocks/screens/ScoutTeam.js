@@ -10,7 +10,7 @@ import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../compone
 import { TTCounterInput, TTDropdown, TTNumberInput, TTTextInput } from '../components/InputComponents';
 import { serializeData, deserializeData, compressData, decompressData, saveMatchData, loadMatchData } from '../../common/LocalStorage'
 import { TTGradient } from '../components/ExtraComponents';
-import { CS } from '../../common/ColorScheme';
+import { ColorScheme as CS } from '../../common/ColorScheme';
 
 // Main function
 const ScoutTeam = ({route, navigation}) => {
@@ -71,7 +71,7 @@ const ScoutTeam = ({route, navigation}) => {
             teleEngaged ? 1 : 0,
 
             // After Round
-            comments,
+            comments.toLowerCase(),
         ];
 
         // Save data using hash
@@ -123,7 +123,7 @@ const ScoutTeam = ({route, navigation}) => {
             {/* All scouting settings go in the scroll view */}
             <KeyboardAvoidingView style={{flex: 1}} behavior="height">
             <ScrollView keyboardShouldPersistTaps='handled' ref={scrollRef}>
-                <View style={{width: "100%", alignItems: "center", height: 35*vh}}>
+                <View style={{width: "100%", alignItems: "center", height: 35*vh, zIndex: 1}}>
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, marginTop: "7%", marginBottom: "2%", alignSelf: "center"}}>Pre-Round</Text>
 
                     <View style={{...globalConatinerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 6}}>
