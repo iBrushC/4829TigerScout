@@ -13,6 +13,10 @@ readable format like 4829-Q18
 // Library imports
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LZString from 'lz-string';
+import { Promise } from "bluebird";
+
+// Component imports
+import { concurrency } from './Constants';
 
 // Constants
 const settingsKey = "@settingsKey";
@@ -64,6 +68,22 @@ const readData = async (key) => {
     }
 }
 
+// Reads multipe match keys
+const readMultipleDataKeys = async (keys) => {
+    try {
+        const outputData = Promise.map(keys,
+            (key) => {
+                return readData(key);
+            },
+            {concurrency: concurrency}
+        );
+        return outputData;
+    } catch (e) {
+        console.error(`Error reading multiple matches:\n${e}`);
+        return null;
+    }
+}
+
 // Deletes a key. Returns false if there was an error, returns true otherwise
 const deleteData = async (key) => {
     try {
@@ -76,12 +96,20 @@ const deleteData = async (key) => {
 }
 
 // Deletes multiple keys. Returns false if there was an error, returns true otherwise
-const deleteMultipleMatches = async (keys) => {
-    for (const key of keys) {
-        const result = await deleteData(key);
-        if (!result) return result;
+const deleteMultipleDataKeys = async (keys) => {
+    try {
+        // Absolutely magical function
+        Promise.map(keys, 
+            (key) => {
+                return deleteData(key);
+            },
+            {concurrency: concurrency}
+        );
+        return true;
+    } catch (e) {
+        console.error(`Error deleting multiple match keys:\n${e}`)
+        return false;
     }
-    return true;
 }
 
 // Takes a list of values and saves it according to conventions. Returns false if there was an error, returns true otherwise
@@ -127,7 +155,9 @@ const loadSettings = async () => {
 // Exports
 export { 
     settingsKey,
+    delimiter,
     readData,
+    readMultipleDataKeys,
     writeData,
     serializeData, 
     deserializeData, 
@@ -136,7 +166,7 @@ export {
     saveMatchData,
     loadMatchData,
     deleteData,
-    deleteMultipleMatches,
+    deleteMultipleDataKeys,
     removeNonMatchKeys,
     loadSettings,
 }

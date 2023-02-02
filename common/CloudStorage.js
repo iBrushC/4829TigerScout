@@ -2,9 +2,11 @@
 import LZString from "lz-string";
 import { initializeApp, getApp, getApps, deleteApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getBytes, listAll } from "firebase/storage";
+import { Promise } from "bluebird";
 
 // Component imports
-import { loadSettings } from './LocalStorage';
+import { loadSettings, delimiter, deserializeData, compressData, decompressData } from './LocalStorage';
+import { concurrency } from './Constants';
 
 // Initialize from settings
 const initializeFirebaseFromSettings = async () => {
@@ -29,8 +31,8 @@ const uploadStringToCloud = async (storage, stringData, filepath) => {
     // Because of the weird way Firebase stores strings, it is normally much more
     // efficient to upload the default string, uncompressed, than it is to compress
     // it first and then upload it.
-    const compressedData = LZString.compress(stringData);
-    const blobUpload = new Blob([compressedData], {type: "text/plain"});
+    // const compressedData = compressData(stringData);
+    const blobUpload = new Blob([stringData], {type: "text/plain"});
     const storageRef = ref(storage, filepath);
     try {
         await uploadBytes(storageRef, blobUpload);
@@ -41,14 +43,32 @@ const uploadStringToCloud = async (storage, stringData, filepath) => {
     }
 };
 
+// Uploads multiple strings to the cloud
+const uploadMultipleStringsToCloud = async (storage, multiStringData, filepaths) => {
+    try {
+        // Batch upload them with a concurrency limit
+        await Promise.map(multiStringData, 
+            (stringData, i) => {
+                const filepath = filepaths[i];
+                return uploadStringToCloud(storage, stringData, filepath);
+            },
+            {concurrency: concurrency}
+        );
+    } catch(e) {
+        console.error(`Error uploading multiple strings:\n${e}`);
+        return null;
+    }
+}
+// !! ADD FUNCTION USING Promise.All() THAT UPLOADS MULTIPLE DATA POINTS ALL AT ONCE
+
 // Reads a string from the cloud
 const readStringFromCloud = async (storage, filepath) => {
     const storageRef = ref(storage, filepath);
     try {
         const bytes = await getBytes(storageRef);
         const byteData = new Uint8Array(bytes);
-        const compressedData = String.fromCharCode(...byteData);
-        const stringData = LZString.decompress(compressedData);
+        const stringData = String.fromCharCode(...byteData);
+        // const stringData = decompressData(compressedData);
         return stringData;
     } catch (e) {
         console.error(`Error Downloading File: ${e}`);
@@ -66,4 +86,47 @@ const getAllFilesFromCloud = async (storage, subpath) => {
     return fileNames;
 }
 
-export { initializeFirebaseFromSettings, uploadStringToCloud, readStringFromCloud, getAllFilesFromCloud };
+// Downloads the data of all the files from the cloud
+const downloadAllFilesFromCloud = async (storage, subpath) => {
+    /*
+    It is arranged in the following structure
+    output = { teamNumber: [matchData1, matchData2] }
+    */
+
+    const fileContents = {};
+    try {
+        const filenames = await getAllFilesFromCloud(storage, subpath);
+        
+        // Wait for all promises at the same time
+        const promiseData = await Promise.map(filenames, 
+            (filename) => {
+                return readStringFromCloud(storage, `${subpath}/${filename}`);
+            },
+            {concurrency: concurrency} // This might need to be messed with
+        );
+
+		// Need some way of sorting each match array based on match number so that graphs are easier
+        for (const stringData of promiseData) {
+            const data = deserializeData(stringData);
+            const teamNumber = data[0];
+            // If there's already something there, push the new data, otherwise creat an array
+            if (fileContents[teamNumber] == null) fileContents[teamNumber] = [data];
+            else fileContents[teamNumber].push(data);
+        }
+
+    } catch (e) {
+        console.error(`Error getting all files:\n${e}`);
+        return null;
+    }
+
+    return fileContents;
+}
+
+export { 
+    initializeFirebaseFromSettings, 
+    uploadStringToCloud, 
+    uploadMultipleStringsToCloud,
+    readStringFromCloud, 
+    getAllFilesFromCloud,
+    downloadAllFilesFromCloud,
+};

@@ -9,9 +9,15 @@ import { ColorScheme as CS } from '../../common/ColorScheme';
 import { globalButtonStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton } from '../components/ButtonComponents';
 import { TTGradient } from '../components/ExtraComponents';
+import { initializeFirebaseFromSettings } from '../../common/CloudStorage';
 
 // Main function
 const Homescreen = ({route, navigation}) => {
+    // Prevents the app from erroring out when firebase is first used
+    React.useEffect(() => {
+        initializeFirebaseFromSettings();
+    },[])
+
     return (
         <View style={globalConatinerStyles.centerContainer}>
             {/* Background */}

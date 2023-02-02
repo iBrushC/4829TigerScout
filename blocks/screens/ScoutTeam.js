@@ -75,9 +75,13 @@ const ScoutTeam = ({route, navigation}) => {
         ];
 
         // Save data using hash
-        await saveMatchData(matchData)
-            .then(() => {navigation.navigate("Home")})
-            .catch(e => {console.error(`Error Saving Data: ${e}`)});
+
+        try {
+            await saveMatchData(matchData)
+            navigation.navigate("Home");
+        } catch (e) {
+            console.error(`Error Saving Data: ${e}`);
+        }
     };
 
     const loadSavedData = (data) => {

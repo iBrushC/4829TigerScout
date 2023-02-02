@@ -10,14 +10,60 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { vh, vw } from '../../common/Constants';
 import { TTGradient } from '../components/ExtraComponents';
 import { ColorScheme as CS } from '../../common/ColorScheme';
-import { initializeFirebaseFromSettings, uploadStringToCloud, getAllFilesFromRef } from '../../common/CloudStorage';
-import { deleteMultipleMatches, loadMatchData, removeNonMatchKeys, readData } from '../../common/LocalStorage';
+import { initializeFirebaseFromSettings, uploadStringToCloud, getAllFilesFromRef, uploadMultipleStringsToCloud } from '../../common/CloudStorage';
+import { deleteMultipleDataKeys, loadMatchData, removeNonMatchKeys, readData, saveMatchData, readMultipleDataKeys } from '../../common/LocalStorage';
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
 
 
+// Serializes the data to a string and saves it
+const saveRandomData = async () => {
+	const matchData = [
+		// Pre Round
+		Math.round(Math.random() * 9999), 
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 2), 
+		Math.round(Math.random() * 2), 
+
+		// Auto
+		Math.round(Math.random()),
+		Math.round(Math.random()),
+		Math.round(Math.random()),
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 9999),
+
+		// Teleop
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 9999),
+		Math.round(Math.random()),
+		Math.round(Math.random()),
+
+		// After Round
+		"testtesttesttest",
+	];
+
+	// Save data using hash
+	await saveMatchData(matchData)
+};
+
 // Main function
 const LocalData = ({route, navigation}) => {
+	// FILLS LOCAL DATA WITH A BUNCH OF FAKE DATA FOR TESTING
+	
+	React.useEffect(() => {
+		const UploadFakeRandomData = async () => {
+			for (let i = 0; i < 200; i++) {
+				await saveRandomData();
+			}
+		}
+		// UploadFakeRandomData();
+	}, []);
+	
+
 	const [matchKeys, setMatchKeys] = React.useState([]);
 
     // Gets all the keys from local settings
@@ -32,24 +78,16 @@ const LocalData = ({route, navigation}) => {
 	};
 
     // Upload all the data keys to the cloud
+	// This takes WAY TOO LONG (~2 minutes for 500 files)
     const uploadDataToCloud = async () => {
         const storage = getStorage();
         if (storage == null) return;
 
-        for (const keyName of matchKeys) {
-            const filename = `${keyName.slice(3)}.txt`;
-            const fileData = await readData(keyName);
-            if (fileData) {
-                try {
-                    await uploadStringToCloud(storage, fileData, filename);
-                    // !! NEED TO INCLUDE A POPUP TO SHOW THAT IT WAS SUCCESSFUL!
-                } catch (e) {
-                    console.error(`There was an error uploading data to the cloud:\n${e}`);
-                    // !! NEED TO INCLUDE A POPUP TO SHOW THAT IT WAS NOT SUCCESSFUL!
-                }
-            }
-        }
-        
+		// !! NEED TO INCLUDE SUBPATHS !!
+		const multiStringData = await readMultipleDataKeys(matchKeys);
+		const filenames = matchKeys.map((keyName) => {return `${keyName.slice(3)}.txt`});
+		await uploadMultipleStringsToCloud(storage, multiStringData, filenames);
+		console.log("Done");
     }
 
 
@@ -57,6 +95,7 @@ const LocalData = ({route, navigation}) => {
 	React.useEffect(() => {
         loadKeys();
         initializeFirebaseFromSettings();
+
     }, []);
 
     
@@ -89,11 +128,12 @@ const LocalData = ({route, navigation}) => {
 					textStyle={{...globalTextStyles.primaryText, fontSize: 16}}
 					onPress={() => {
 						// Should probably add an "are you sure?" alert
-						deleteMultipleMatches(matchKeys)
+						deleteMultipleDataKeys(matchKeys)
 							.then(loadKeys)
 							.catch(e => {console.error(e)});
 					}}
 				/>}
+				<View style={{marginBottom: 4*vh}}></View>
 			</ScrollView>
 
 			{/* Bottom button */}
