@@ -51,7 +51,7 @@ const writeData = async (data, key) => {
         return true;
     } catch (e) {
         console.error(e);
-        return false;
+        return null;
     }
 };
 
@@ -64,7 +64,7 @@ const readData = async (key) => {
         }
     } catch (e) {
         console.error(e);
-        return false;
+        return null;
     }
 }
 
@@ -91,7 +91,7 @@ const deleteData = async (key) => {
         return true;
     } catch (e) {
         console.error(e);
-        return false;
+        return null;
     }
 }
 
@@ -108,7 +108,7 @@ const deleteMultipleDataKeys = async (keys) => {
         return true;
     } catch (e) {
         console.error(`Error deleting multiple match keys:\n${e}`)
-        return false;
+        return null;
     }
 }
 
@@ -125,7 +125,7 @@ const saveMatchData = async (data) => {
 const loadMatchData = async (key) => {
     const data = await readData(key);
     if (compressData == false) {
-        return false;
+        return null;
     } else {
         const listData = deserializeData(data);
         return listData;
@@ -141,14 +141,14 @@ const removeNonMatchKeys = (loadedKeys) => {
 // Helper function to load settings
 const loadSettings = async () => {
     const loadedSettings = await readData(settingsKey);
-    if (!loadedSettings) return false;
+    if (!loadedSettings) return null;
 
     // This probably shouldn't even include a try function because it shouldn't accept settings that don't parse correctly
     try {
         const parsedSettings = JSON.parse(loadedSettings);
         return parsedSettings;
     } catch (e) {
-        return false;
+        return null;
     }
 }
 

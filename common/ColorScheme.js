@@ -6,6 +6,7 @@ let ColorScheme = {
     // All general colors
     light1: "#FFFFFF",
     light2: "#F7F3E1",
+    light3: "#CCC1B8",
 
     accent1: "#D07E32",
     accent2: "#E17512", 

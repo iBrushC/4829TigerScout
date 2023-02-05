@@ -11,7 +11,7 @@ import { concurrency } from './Constants';
 // Initialize from settings
 const initializeFirebaseFromSettings = async () => {
     const settings = await loadSettings();
-    if (settings?.cloudConfig) {
+    if (settings?.cloudConfig !== undefined) {
         // If there isnt already an app, create one
         if (getApps().length === 0) {
             return initializeApp(settings.cloudConfig);
@@ -22,6 +22,10 @@ const initializeFirebaseFromSettings = async () => {
             return initializeApp(settings.cloudConfig);
         }
         return getApp();
+    } else {
+        if (getApps().length !== 0) {
+            deleteApp(getApp());
+        }
     }
     return null;
 }
@@ -100,11 +104,11 @@ const downloadAllFilesFromCloud = async (storage, subpath) => {
         // Wait for all promises at the same time
         const promiseData = await Promise.map(filenames, 
             (filename) => {
-                return readStringFromCloud(storage, `${subpath}/${filename}`);
+                return readStringFromCloud(storage, filename);
             },
             {concurrency: concurrency} // This might need to be messed with
         );
-
+        
 		// Need some way of sorting each match array based on match number so that graphs are easier
         for (const stringData of promiseData) {
             const data = deserializeData(stringData);

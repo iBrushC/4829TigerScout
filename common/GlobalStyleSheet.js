@@ -12,6 +12,7 @@ const globalButtonStyles = StyleSheet.create({
     primaryButton: {
         // Spacing and positioning
         width: "90%",
+        flexDirection: "row",
 
         padding: 2*vw,
         margin: 1*vh,
@@ -28,6 +29,7 @@ const globalButtonStyles = StyleSheet.create({
     secondaryButton: {
         // Spacing and positioning
         width: "90%",
+        flexDirection: "row",
 
         padding: 2*vw,
         margin: 1*vh,
@@ -44,6 +46,7 @@ const globalButtonStyles = StyleSheet.create({
     topCounterButton: {
         // Spacing and positioning
         width: "80%",
+        flexDirection: "row",
 
         padding: 2*vw,
         margin: 1*vh,
@@ -62,6 +65,7 @@ const globalButtonStyles = StyleSheet.create({
     bottomCounterButton: {
         // Spacing and positioning
         width: "80%",
+        flexDirection: "row",
 
         padding: 2*vw,
         margin: 1*vh,
@@ -80,6 +84,7 @@ const globalButtonStyles = StyleSheet.create({
     matchKeyButton: {
         // Spacing and positioning
         width: "90%",
+        flexDirection: "row",
 
         padding: 2*vw,
         margin: 1*vh,
@@ -152,6 +157,7 @@ const globalTextStyles = StyleSheet.create({
         // Formatting
         fontFamily: "Bebas",
         fontSize: 48,
+        alignSelf: "center",
 
         // Color
         color: CS.light1
@@ -160,6 +166,7 @@ const globalTextStyles = StyleSheet.create({
         // Formatting
         fontFamily: "Bebas",
         fontSize: 36,
+        alignSelf: "center",
 
         // Color
         color: CS.light1
@@ -169,6 +176,8 @@ const globalTextStyles = StyleSheet.create({
         fontFamily: "LGC", 
         fontSize: 18,
         letterSpacing: -1,
+        alignSelf: "center",
+        textAlign: "center",
 
         // Color
         color: CS.light1,
@@ -178,13 +187,14 @@ const globalTextStyles = StyleSheet.create({
         fontFamily: "LGC", 
         fontSize: 18,
         letterSpacing: 1,
+        alignSelf: "center",
 
         // Color
         color: CS.dark2,
     }
 })
 
-const globalConatinerStyles = StyleSheet.create({
+const globalContainerStyles = StyleSheet.create({
     // General containers
     centerContainer: {
         flex: 1,
@@ -211,7 +221,8 @@ const globalConatinerStyles = StyleSheet.create({
     // Layout
     columnContainer: {
         flex: 1,
-        flexDirection: "column"
+        flexDirection: "column",
+        justifyContent: "center"
     },
     rowContainer: {
         flex: 1,
@@ -221,10 +232,19 @@ const globalConatinerStyles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         width: "100%",
-        padding: 1*vh,
+        padding: 2*vh,
         borderRadius: 1*vw,
+    },
+    loadingContainer: {
+        backgroundColor: CS.accent2, 
+        width: 4*vh, 
+        height:4*vh, 
+        alignSelf: "center", 
+        margin: 3*vh,
     }
 });
 
+
+
 // Exports
-export { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles };
+export { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles };

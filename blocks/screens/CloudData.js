@@ -5,39 +5,61 @@ import { getApp, getApps } from "firebase/app";
 import { StyleSheet, Text, View } from 'react-native';
 
 // Component imports
-import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
+import { vh, vw } from '../../common/Constants';
+import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { readStringFromCloud, initializeFirebaseFromSettings, getAllFilesFromCloud, downloadAllFilesFromCloud, uploadMultipleStringsToCloud } from '../../common/CloudStorage';
+import { TTButton } from '../components/ButtonComponents';
+import { TTGradient, TTLoading } from '../components/ExtraComponents';
+import { loadSettings } from '../../common/LocalStorage';
 
 // Main function
 const CloudData = ({route, navigation}) => {
-    React.useEffect(() => {
-        initializeFirebaseFromSettings();
+    // Settings
+    const [settings, setSettings] = React.useState(null);
 
+    // Loading states
+    const [loadingVisible, setLoadingVisible] = React.useState(false);
+    const [loadingContent, setLoadingContent] = React.useState([]);
+
+    React.useEffect(() => {
         const wrapper = async () => {
-            const storage = getStorage();
-            const allFiles = await getAllFilesFromCloud(storage, "");
-            console.log(`Number of files: ${allFiles.length}`)
-            const fileData = await downloadAllFilesFromCloud(storage, "");
-            // console.log("All file data:");
-            // console.log(JSON.stringify(fileData, null, 2));
+            const loadedSettings = await loadSettings();
+            setSettings(loadedSettings);
         };
 
+        initializeFirebaseFromSettings();
         wrapper();
     }, []);
 
     // No cloud connection
     if (getApps().length === 0) {
         return (
-            <View style={globalConatinerStyles.centerContainer}>
-                <Text>You're not connected to firebase!</Text>
+            <View style={globalContainerStyles.centerContainer}>
+                <TTGradient/>
+                <Text style={globalTextStyles.labelText}>You're not connected to Firebase!</Text>
+                <TTButton
+                    text="Go To Settings"
+                    buttonStyle={{...globalButtonStyles.primaryButton, width: "70%", margin: 2 * vh}}
+                    textStyle={{...globalTextStyles.primaryText, fontSize: 36, marginTop: 0.5*vh}}
+                    onPress={() => {navigation.navigate("Settings")}}
+                />
             </View>
         );
     }
 
     // Everything else
     return (
-        <View style={globalConatinerStyles.centerContainer}>
-            <Text>Youre connected to {getApp().options.projectId}</Text>
+        <View style={globalContainerStyles.centerContainer}>
+            <TTGradient/>
+            <TTLoading
+                state={loadingVisible}
+                setState={setLoadingVisible}
+                title={loadingContent[0]}
+                mainText={loadingContent[1]}
+                acceptText={loadingContent[2]}
+            />
+            
+            <Text style={globalTextStyles.primaryText}>Youre connected to {getApp().options.projectId}</Text>
         </View>
     );
 }

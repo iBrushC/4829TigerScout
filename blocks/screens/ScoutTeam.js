@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 // Component imports
 import { vh, vw } from '../../common/Constants';
-import { globalButtonStyles, globalInputStyles, globalTextStyles, globalConatinerStyles } from '../../common/GlobalStyleSheet';
+import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { TTCounterInput, TTDropdown, TTNumberInput, TTTextInput } from '../components/InputComponents';
 import { serializeData, deserializeData, compressData, decompressData, saveMatchData, loadMatchData } from '../../common/LocalStorage'
@@ -14,6 +14,7 @@ import { ColorScheme as CS } from '../../common/ColorScheme';
 
 // Main function
 const ScoutTeam = ({route, navigation}) => {
+    // Might be good to make some of these into arrays
     const matchTypeValues = ["Practice", "Qualifiers", "Finals"];
     const teamColorValues = ["Red", "Blue"]
 
@@ -121,7 +122,7 @@ const ScoutTeam = ({route, navigation}) => {
     const scrollRef = React.useRef(null);
 
     return (
-        <View style={globalConatinerStyles.topContainer}>
+        <View style={globalContainerStyles.topContainer}>
         <TTGradient/>
 
             {/* All scouting settings go in the scroll view */}
@@ -130,7 +131,7 @@ const ScoutTeam = ({route, navigation}) => {
                 <View style={{width: "100%", alignItems: "center", height: 35*vh, zIndex: 1}}>
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, marginTop: "7%", marginBottom: "2%", alignSelf: "center"}}>Pre-Round</Text>
 
-                    <View style={{...globalConatinerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 6}}>
+                    <View style={{...globalContainerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 6}}>
                         {/* Team number */}
                         <TTNumberInput
                             state={teamNumber}
@@ -159,7 +160,7 @@ const ScoutTeam = ({route, navigation}) => {
                     </View>
 
                     {/* Match type and number */}
-                    <View style={{...globalConatinerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 5}}>
+                    <View style={{...globalContainerStyles.rowContainer, alignItems: "center", justifyContent: "center", zIndex: 5}}>
                         <TTDropdown 
                             state={matchType} 
                             setState={setMatchType} 
@@ -200,9 +201,9 @@ const ScoutTeam = ({route, navigation}) => {
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, margin: 15}}>Auto</Text>
                     
                     {/* Row of all components */}
-                    <View style={{...globalConatinerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15, flexGrow: 0.7}}>
+                    <View style={{...globalContainerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15, flexGrow: 0.7}}>
                         {/* Button Counters */}
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center", alignContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center", alignContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>High</Text>
                             {/* Have got to find a better system than this */}
                             <TTCounterInput
@@ -217,7 +218,7 @@ const ScoutTeam = ({route, navigation}) => {
                             />
                         </View>
 
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>Middle</Text>
                             {/* Have got to find a better system than this */}
                             <TTCounterInput
@@ -232,7 +233,7 @@ const ScoutTeam = ({route, navigation}) => {
                             />
                         </View>
 
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>Low</Text>
                             {/* Have got to find a better system than this */}
                             <TTCounterInput
@@ -247,7 +248,7 @@ const ScoutTeam = ({route, navigation}) => {
                             />
                         </View>
 
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>Misses</Text>
                             <TTCounterInput
                                 state={autoMisses}
@@ -261,7 +262,7 @@ const ScoutTeam = ({route, navigation}) => {
                             />
                         </View>
                     </View>
-                    <View style={{...globalConatinerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15, flexGrow: 0.3}}>
+                    <View style={{...globalContainerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15, flexGrow: 0.3}}>
                         {/* Taxi */}
                         <TTSimpleCheckbox 
                                 state={taxi}
@@ -308,9 +309,9 @@ const ScoutTeam = ({route, navigation}) => {
 
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, margin: 15}}>Teleop</Text>
                     
-                    <View style={{...globalConatinerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15,}}>
+                    <View style={{...globalContainerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15,}}>
                         {/* Button Counters */}
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>High</Text>
                             {/* Have got to find a better system than this */}
                             <TTCounterInput
@@ -325,7 +326,7 @@ const ScoutTeam = ({route, navigation}) => {
                             />
                         </View>
 
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>Middle</Text>
                             {/* Have got to find a better system than this */}
                             <TTCounterInput
@@ -340,7 +341,7 @@ const ScoutTeam = ({route, navigation}) => {
                             />
                         </View>
 
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>Low</Text>
                             {/* Have got to find a better system than this */}
                             <TTCounterInput
@@ -355,7 +356,7 @@ const ScoutTeam = ({route, navigation}) => {
                             />
                         </View>
 
-                        <View style={{...globalConatinerStyles.columnContainer, justifyContent: "center"}}>
+                        <View style={{...globalContainerStyles.columnContainer, justifyContent: "center"}}>
                             <Text style={{...globalTextStyles.labelText, fontSize: 20, alignSelf: "center", position: "absolute", top: 0}}>Misses</Text>
                             <TTCounterInput
                                 state={teleMisses}
@@ -381,7 +382,7 @@ const ScoutTeam = ({route, navigation}) => {
 
                     <Text style={{...globalTextStyles.primaryText, fontSize: 24, margin: 15}}>Endgame</Text>
                     
-                    <View style={{...globalConatinerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15, flexGrow: 0.3}}>
+                    <View style={{...globalContainerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15, flexGrow: 0.3}}>
                         <TTSimpleCheckbox 
                                 state={teleDocked}
                                 setState={setTeleDocked}
@@ -401,14 +402,14 @@ const ScoutTeam = ({route, navigation}) => {
                                 boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                             />
                     </View>
-                    <View style={{...globalConatinerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15,}}>
+                    <View style={{...globalContainerStyles.rowContainer, alignContent: "center", justifyContent: "center", paddingLeft: 15, paddingRight: 15,}}>
                         <TTTextInput
                                 state={comments}
                                 setState={setComments}
-                                placeholder="Comments (25 characters)"
+                                placeholder="Comments (50 characters)"
                                 placeholderTextColor={`${CS.light1}50`}
                                 multiline={true}
-                                maxLength={25}
+                                maxLength={50}
                                 numberOfLines={4}
                                 onFocus={() => {scrollRef.current.scrollToEnd()}}
                                 style={[
@@ -422,7 +423,7 @@ const ScoutTeam = ({route, navigation}) => {
                     <View style={{marginBottom: 5*vh}}/> 
                 </View>
                 
-                <View style={{...globalConatinerStyles.centerContainer, backgroundColor: "#00000000"}}>
+                <View style={{...globalContainerStyles.centerContainer, backgroundColor: "#00000000"}}>
                     <TTButton
                         text="Save Data"
                         buttonStyle={{...globalButtonStyles.primaryButton, width: "90%", margin: 5*vh}}

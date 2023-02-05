@@ -37,7 +37,6 @@ const TTButton = (props) => {
     return (
         <Pressable {...props} style={props.overrideStyle} onPressIn={() => fadeTo(animatedRef, 0)} onPressOut={() => fadeTo(animatedRef, 1)}>
             <Animated.View style={[{opacity: opacity}, props.buttonStyle]}>
-                {props.iconComponent}
                 <Text style={props.textStyle}>{props.text}</Text>
             </Animated.View>
         </Pressable>
