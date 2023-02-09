@@ -1,5 +1,6 @@
 # TigerScout
 TigerScout is a easy, open source cloud-integrated scouting app made by 4829. It allows for simple and objective scouting, along with useful statistics for strategizing and alliance selection. Firebase cloud integration allows for seamless data syncing, without having to worry about QR codes or CSV files.
+<sub>All code written and maintained by Andrew M. Combs</sub>
 
 ## Storage
 TigerScout uses Firebase storage buckets to store data in the cloud, which you can see how to set up in the *Making a Bucket* section. However, because connection to the internet can be iffy in competitions, data is first stored locally on each device before being uploaded when the internet is available. 
@@ -20,9 +21,12 @@ Additionally, data from the cloud is downloaded and stored locally until a manua
 - To connect to or disconnect from a bucket, press the **Settings** button on the home screen.
 	- If you're already connected to a bucket, you'll see the bucket you're connect to, along with the subfolder. You'll have the option to disconnect with the **Disconnect** button. Once you disconnect, you will not longer have access to the cloud data, and will not be able to reconnect without re-entering the code.
 	- If you're not connected, you'll have two options to get connected to a storage bucket:
-		1. If you have a functioning front camera, you can press **Scan QR Code**. Once the QR code is in view, it will automatically scan and prompt you with a password. If the correct password is entered, you will be automatically connected to the bucket
-		2. If you don't have a functioning front camera, you can press **Enter Text**. Paste in the given code and press **Ok**. You'll be prompted with a password. If the correct password is entered, you will be automatically connected to the bucket
+		- If you have a functioning front camera, you can press **Scan QR Code**. Once the QR code is in view, it will automatically scan and prompt you with a password. If the correct password is entered, you will be automatically connected to the bucket
+		- If you don't have a functioning front camera, you can press **Enter Text**. Paste in the given code and press **Ok**. You'll be prompted with a password. If the correct password is entered, you will be automatically connected to the bucket
 
 ## Making a Bucket
 (INCLUDE INSTRUCTIONS HERE FOR HOW TO MAKE A BUCKET WITH FIREBASE)
 (INCLUDE INSTRUCTIONS FOR USING ONLINE TOOL ONCE I MAKE IT)
+
+## Security Notice
+While measures have been put in place to ensure that unwanted users cannot access edit data, I am far from a professional in cybersecurity and cannot guarantee security. To ensure that unwanted users don't have edit access to your data, do not share your bucket password with anyone you don't know and trust. If you wish to share data with someone you don't know, give them a code where they are only given viewer permissions (as seen in *Making a Bucket*) and enter the password for them.
