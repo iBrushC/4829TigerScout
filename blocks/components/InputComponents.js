@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { StyleSheet, Animated, Easing, View, Text, TextInput, Pressable } from 'react-native';
+import { vh } from '../../common/Constants';
 
 import { TTButton } from './ButtonComponents';
 
@@ -92,12 +93,12 @@ const TTDropdown = (props) => {
     const setDropdown = (newState) => {
         if (isActive) {
             fadeToCallback(animatedRef, 0, () => setIsActive(!isActive), 120);
+            if (props.setState !== null) {
+                props.setState(newState);
+            }
         } else {
             setIsActive(!isActive);
             fadeTo(animatedRef, 1, 120);
-        }
-        if (props.setState != null) {
-            props.setState(newState);
         }
     }
 
@@ -145,6 +146,7 @@ const TTDropdown = (props) => {
                 flexDirection: "row",
                 width: props.boxWidth, 
                 height: props.boxHeight,
+                marginTop: -0.01*vh,
             },
             props.boxStyle,
             borderStyle,

@@ -1,7 +1,7 @@
 // Library imports
 import LZString from "lz-string";
 import { initializeApp, getApp, getApps, deleteApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getBytes, listAll } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getBytes, listAll, getBlob } from "firebase/storage";
 import { Promise } from "bluebird";
 
 // Component imports
@@ -63,16 +63,14 @@ const uploadMultipleStringsToCloud = async (storage, multiStringData, filepaths)
         return null;
     }
 }
-// !! ADD FUNCTION USING Promise.All() THAT UPLOADS MULTIPLE DATA POINTS ALL AT ONCE
 
 // Reads a string from the cloud
 const readStringFromCloud = async (storage, filepath) => {
     const storageRef = ref(storage, filepath);
     try {
-        const bytes = await getBytes(storageRef);
-        const byteData = new Uint8Array(bytes);
-        const stringData = String.fromCharCode(...byteData);
-        // const stringData = decompressData(compressedData);
+        const blob = await getBlob(storageRef);
+        const blobResponse = new Response(blob);
+        const stringData = await blobResponse.text()
         return stringData;
     } catch (e) {
         console.error(`Error Downloading File: ${e}`);

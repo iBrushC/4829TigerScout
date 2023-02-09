@@ -1,6 +1,6 @@
 // Library imports
 import * as React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // Literally just to get cool background lmao
 
 // Component imports
@@ -18,10 +18,26 @@ const Homescreen = ({route, navigation}) => {
         initializeFirebaseFromSettings();
     },[])
 
+    // !! TODO MAKE EVERY SINGLE FONT SIZE IN REFERENCE TO VH / VW
+
     return (
-        <View style={globalContainerStyles.centerContainer}>
+        <View style={{...globalContainerStyles.centerContainer, justifyContent: "space-evenly"}}>
             {/* Background */}
             <TTGradient/>
+
+            {/* Spacer */}
+            {Platform.OS === 'ios' && <View style={{margin: 1.2*vh}}/>}
+
+            {/* Clout Header */}
+            <Text style={{
+                alignSelf: "center",
+
+                color: `${CS.light1}30`,
+                fontFamily: "LGC Light",
+                letterSpacing: 0.5*vw
+            }}>
+                <Text style={{fontFamily: "LGC Bold"}}>TigerScout</Text> powered by <Text style={{fontFamily: "LGC Bold"}}>4829</Text>
+            </Text>
             
             {/* Scout */}
             <TTButton 
@@ -102,6 +118,8 @@ const Homescreen = ({route, navigation}) => {
                 ]}
                 onPress= {() => navigation.navigate("Settings", {})}
             />
+
+            <View style={{margin: 0.25*vh}}/>
         </View>
     );
 }

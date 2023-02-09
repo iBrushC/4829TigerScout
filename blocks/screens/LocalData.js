@@ -11,7 +11,7 @@ import { vh, vw } from '../../common/Constants';
 import { ColorScheme as CS } from '../../common/ColorScheme';
 import { TTGradient, TTConfirmation, TTLoading, TTWarning, TTAlert } from '../components/ExtraComponents';
 import { initializeFirebaseFromSettings, uploadStringToCloud, getAllFilesFromRef, uploadMultipleStringsToCloud } from '../../common/CloudStorage';
-import { deleteMultipleDataKeys, loadMatchData, removeNonMatchKeys, readData, saveMatchData, readMultipleDataKeys, loadSettings } from '../../common/LocalStorage';
+import { deleteMultipleDataKeys, loadMatchData, removeNonMatchKeys, readData, saveMatchData, readMultipleDataKeys, loadSettings, deleteData } from '../../common/LocalStorage';
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 
@@ -20,30 +20,30 @@ import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContaine
 const saveRandomData = async () => {
 	const matchData = [
 		// Pre Round
-		Math.round(Math.random() * 9999), 
-		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 30), 
+		Math.round(Math.random() * 3),
 		Math.round(Math.random() * 2), 
-		Math.round(Math.random() * 2), 
+		Math.round(Math.random()), 
 
 		// Auto
 		Math.round(Math.random()),
 		Math.round(Math.random()),
 		Math.round(Math.random()),
-		Math.round(Math.random() * 9999),
-		Math.round(Math.random() * 9999),
-		Math.round(Math.random() * 9999),
-		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 3),
+		Math.round(Math.random() * 3),
+		Math.round(Math.random() * 3),
+		Math.round(Math.random() * 3),
 
 		// Teleop
-		Math.round(Math.random() * 9999),
-		Math.round(Math.random() * 9999),
-		Math.round(Math.random() * 9999),
-		Math.round(Math.random() * 9999),
+		Math.round(Math.random() * 3),
+		Math.round(Math.random() * 3),
+		Math.round(Math.random() * 3),
+		Math.round(Math.random() * 3),
 		Math.round(Math.random()),
 		Math.round(Math.random()),
 
 		// After Round
-		"testtesttesttest",
+		"1246890!@#$%^&*()<>?:",
 	];
 
 	// Save data using hash
@@ -105,7 +105,6 @@ const LocalData = ({route, navigation}) => {
 			setLoadingVisible(false);
 			setWarningContent([null, `Couldn't get a connection to bucket storage!\n${e}`, null]);
 			setWarningVisible(true);
-			console.error("something bad happened!");
 			return;
 		}
 		const filenames = matchKeys.map(
@@ -200,17 +199,25 @@ const LocalData = ({route, navigation}) => {
 			<ScrollView style={{paddingTop: 2*vh}}>
 				{
 					matchKeys.map((keyName, i) => (
-						<View key={i}>
+						<View key={i} style={{flexDirection: "row", alignSelf: "center"}}>
 							<TTButton
 								text={keyName.slice(3)}
-								buttonStyle={{...globalButtonStyles.matchKeyButton, width: "90%", margin: 1 * vh}}
-								textStyle={{...globalTextStyles.matchKeyText, margin: 3}}
+								buttonStyle={{...globalButtonStyles.matchKeyButton, width: 80 * vw, marginVertical: 1 * vh}}
+								textStyle={{...globalTextStyles.matchKeyText}}
 								onPress={async () => {
 									const matchData = await loadMatchData(keyName)
 									navigation.navigate("ScoutTeam", {matchData: matchData})
 								}}
 							/>
-							
+							<TTButton
+								text="X"
+								buttonStyle={{...globalButtonStyles.matchKeyButton, backgroundColor: CS.accent3, marginHorizontal: 0}}
+								textStyle={{...globalTextStyles.matchKeyText, color: CS.light1}}
+								onPress={async () => {
+									await deleteData(keyName);
+									await loadKeys();
+								}}
+							/>
 						</View>
 					))
 				}
@@ -228,14 +235,24 @@ const LocalData = ({route, navigation}) => {
 			</ScrollView>
 
 			{/* Bottom button */}
-			<View style={{backgroundColor: CS.transparent, paddingTop: "2%", paddingBottom: "2%"}}>
+			<View style={{backgroundColor: CS.transparent}}>
 				<TTGradient/>
-				<TTButton
-					text="Upload Data To Cloud"
-					buttonStyle={{...globalButtonStyles.primaryButton, width: "90%", margin: 1 * vh}}
-					textStyle={{...globalTextStyles.primaryText, fontSize: 24}}
-					onPress={() => {uploadDataToCloud()}}
-				/>
+
+				{ (settings !== null && settings?.permissions === "editor") &&
+					<TTButton
+						text="Upload Data To Cloud"
+						buttonStyle={{...globalButtonStyles.primaryButton, width: "90%", margin: 2 * vh}}
+						textStyle={{...globalTextStyles.primaryText, fontSize: 24}}
+						onPress={() => {uploadDataToCloud()}}
+					/>
+				}
+				{
+					(settings !== null && settings?.permissions !== "editor") &&
+					<Text style={{...globalTextStyles.labelText, fontFamily: "LGC Light", color: CS.light2, margin: 2*vh}}>
+						You don't have permission to upload to the bucket you're connected to!
+					</Text>
+				}
+				
 			</View>
         </View>
     );

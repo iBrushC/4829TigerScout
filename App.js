@@ -11,6 +11,7 @@ import Homescreen from './blocks/screens/Homescreen';
 import ScoutTeam from './blocks/screens/ScoutTeam';
 import LocalData from './blocks/screens/LocalData';
 import CloudData from './blocks/screens/CloudData';
+import TeamAnalytics from './blocks/screens/TeamAnalytics';
 import Settings from './blocks/screens/Settings';
 
 // Navigation setup (https://reactnavigation.org/docs very useful)
@@ -65,17 +66,22 @@ const App = () => {
                     {(props) => <ScoutTeam {...props}/>}
                 </Stack.Screen>
 
-                {/* Scouting screen */}
+                {/* Local data screen */}
                 <Stack.Screen name="LocalData" options={{title: "Local Data"}}>
                     {(props) => <LocalData {...props}/>}
                 </Stack.Screen>
 
-                {/* Scouting screen */}
+                {/* Cloud data screen */}
                 <Stack.Screen name="CloudData" options={{title: "Cloud Data"}}>
                     {(props) => <CloudData {...props}/>}
                 </Stack.Screen>
 
-                {/* Scouting screen */}
+                {/* Team analytic screen */}
+                <Stack.Screen name="TeamAnalytics" options={({route}) => ({title: `Team ${route.params.teamNumber}`})}>
+                    {(props) => <TeamAnalytics {...props}/>}
+                </Stack.Screen>
+
+                {/* Settings screen */}
                 <Stack.Screen name="Settings" options={{title: "Settings"}}>
                     {(props) => <Settings {...props}/>}
                 </Stack.Screen>

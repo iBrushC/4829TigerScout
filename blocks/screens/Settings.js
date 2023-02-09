@@ -3,14 +3,15 @@ import * as React from 'react';
 import { getStorage } from "firebase/storage";
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera, PermissionStatus } from 'expo-camera';
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native';
+import { StyleSheet, Text, View, TextInput, NativeModules } from 'react-native';
+import CryptoJS from 'crypto-js';
 
 // Component imports
 import { ColorScheme as CS } from '../../common/ColorScheme';
-import { TTAlert, TTConfirmation, TTGradient, TTWarning } from '../components/ExtraComponents';
+import { TTAlert, TTConfirmation, TTGradient, TTWarning, TTPoll } from '../components/ExtraComponents';
 import { TTButton, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { readStringFromCloud, initializeFirebaseFromSettings } from '../../common/CloudStorage';
-import { readData, writeData, loadSettings, deleteData, settingsKey } from '../../common/LocalStorage';
+import { readData, writeData, loadSettings, deleteData, settingsKey, saveCloudCache } from '../../common/LocalStorage';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { vh } from '../../common/Constants';
 
@@ -32,6 +33,13 @@ const Settings = ({route, navigation}) => {
     const [confirmationVisible, setConfirmationVisible] = React.useState(false);
     const [confirmationContent, setConfirmationContent] = React.useState([]);
 
+    // Poll sates
+    const [enterTextVisible, setEnterTextVisible] = React.useState(false);
+    const [enterPasswordVisible, setEnterPasswordVisible] = React.useState(false);
+    const [enteredPassword, setEnteredPassword] = React.useState("");
+    
+    const [connectionData, setConnectionData] = React.useState("");
+
     // Settings
     const [settings, setSettings] = React.useState({});
 
@@ -45,7 +53,7 @@ const Settings = ({route, navigation}) => {
         getBarCodeScannerPermissions();
 
         // Loading settings
-        const loadSettingsToState = async() => {
+        const loadSettingsToState = async () => {
             const loadedSettings = await loadSettings();
             setSettings(loadedSettings);
         };
@@ -53,6 +61,23 @@ const Settings = ({route, navigation}) => {
 
         // Loading firebase from settings
         initializeFirebaseFromSettings();
+        
+        const sampleSettings = {
+            "bucketName": "4829 Scoutbucket",
+            "cloudConfig": {
+                "apiKey": "AIzaSyAQwBk8GzpPkvUnrKPS7IBdNHFOArPjToo",
+                "authDomain": "scouting-ed3f1.firebaseapp.com",
+                "projectId": "scouting-ed3f1",
+                "storageBucket": "scouting-ed3f1.appspot.com",
+                "messagingSenderId": "601336489441",
+                "appId": "1:601336489441:web:ea260c66605836b0cc9ea0"
+            },
+            "subpath": "testFolder/",
+            "permissions": "editor"
+        }
+        // const encrypted = CryptoJS.AES.encrypt(JSON.stringify(sampleSettings), "weehaw4829!");
+        // console.log(encrypted.toString());
+
     }, []);
 
     // Checks to make sure permission exists
@@ -78,44 +103,54 @@ const Settings = ({route, navigation}) => {
         );
     }
 
-    const handleBarCodeScanned = async ({ type, data }) => {
+    const connectFromData = async () => {
         const contentEquivalency = (a, b) => {
             return a.sort().join(",") === b.sort().join(",");
         }
 
-        setScanned(true);
         try {
             // !! NEED TO ADD MORE CHECKS TO MAKE SURE GARBAGE DATA CAN'T BE UPLOADED!
-            const parsedData = JSON.parse(data);
+            const bytes = CryptoJS.AES.decrypt(connectionData.toString(), enteredPassword);
+            const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+            const parsedData = JSON.parse(decryptedData);
 
             // Make sure barcode has required keys
-            const requiredKeys = ["bucketName", "cloudConfig", "subpath"];
+            const requiredKeys = ["bucketName", "cloudConfig", "subpath", "permissions"];
             if (!contentEquivalency(requiredKeys, Object.keys(parsedData))) {
                 setWarningContent([null, "QR code doesn't have the right keys to connect to a bucket!", null]);
-                setWarningVisible(true);
+                setTimeout(() => setWarningVisible(true), 500);
                 return;
             }
 
             const settings = {
-                bucketName: parsedData?.bucketName,
-                cloudConfig: parsedData?.cloudConfig,
-                subpath: parsedData?.subpath,
+                bucketName: parsedData.bucketName,
+                cloudConfig: parsedData.cloudConfig,
+                subpath: parsedData.subpath,
+                permissions: parsedData.permissions
             };
             setSettings(settings);
             writeData(JSON.stringify(settings), settingsKey);
 
             setAlertContent([null, `Successfully connected to ${settings.bucketName}!\n`, null]);
-            setAlertVisible(true);
+            setTimeout(() => setAlertVisible(true), 500);
         } catch (e) {
-            setWarningContent([null, `There was an issue loading settings from the scanned barcode!\n\n${e}\n`, null]);
-            setWarningVisible(true);
+            setWarningContent([null, `Invalid data entered, connection failed!`, null]);
+            setTimeout(() => setWarningVisible(true), 500);
             return;
         }
+    }
+
+    const handleBarCodeScanned = async ({ type, data }) => {
+        setScanned(true);
+        setConnectionData(data);
+        setEnteredPassword("");
+        setEnterPasswordVisible(true);
     };
 
     const deleteCallback = () => {
         deleteData(settingsKey);
         setSettings(null);
+        saveCloudCache(null);
     }
 
     //
@@ -123,7 +158,7 @@ const Settings = ({route, navigation}) => {
     //
     const BarCodeScannerLayout = () => {
         return (
-            <View style={{flex: 1, flexDirection: "column", alignContent: "space-evenly", justifyContent: "space-around", padding: 3*vh}}>
+            <View style={{flex: 1, flexDirection: "column", alignContent: "center", justifyContent: "space-around", padding: 3*vh}}>
                 <Camera
                     style={{flex: 1, borderRadius: 2*vh}}
                     key={scanned ? 1 : 2}
@@ -184,12 +219,29 @@ const Settings = ({route, navigation}) => {
                 {
                     settings === null &&
                     (<View style={globalContainerStyles.columnContainer}>
-                        <Text style={{...globalTextStyles.labelText, fontSize: 18, color: CS.light1, margin: 4*vh}}>
+                        <Text style={{...globalTextStyles.labelText, fontSize: 18, color: CS.light1, margin: 3*vh}}>
                             To get connected, scan a team's QR code.
                         </Text>
                         <TTButton 
                             text="Scan QR Code" 
-                            onPress={() => {setScanned(false)}}
+                            onPress={() => {
+                                setConnectionData("");
+                                setScanned(false);
+                            }}
+                            buttonStyle={{...globalButtonStyles.primaryButton, width: "80%"}} 
+                            textStyle={globalTextStyles.secondaryText}
+                        />
+                        <Text style={{...globalTextStyles.labelText, fontSize: 18, color: CS.light1, margin: 3*vh}}>
+                            Or connect with text
+                        </Text>
+                        <TTButton 
+                            text="Enter Text" 
+                            onPress={() => {
+                                var cipher  = CryptoJS.AES.encrypt("4829", "weehaw4829!");
+                                console.log("Encrypted: ", cipher.toString());
+                                setConnectionData("");
+                                setEnterTextVisible(true);
+                            }}
                             buttonStyle={{...globalButtonStyles.primaryButton, width: "80%"}} 
                             textStyle={globalTextStyles.secondaryText}
                         />
@@ -226,6 +278,38 @@ const Settings = ({route, navigation}) => {
                 acceptText={confirmationContent[2]}
                 rejectText={confirmationContent[3]}
                 acceptCallback={deleteCallback}
+            />
+            <TTPoll
+                state={enterPasswordVisible}
+                setState={setEnterPasswordVisible}
+                title="Enter Password"
+                overrideTitleStyle={{fontSize: 30}}
+                mainText="Enter the bucket's password to connect (16 characters max)"
+                acceptText="Ok"
+                textState={enteredPassword}
+                setTextState={setEnteredPassword}
+                overrideTextInputStyle={{...globalTextStyles.labelText, height: 8*vh}}
+                maxLength={16}
+                enterCallback={() => {
+                    connectFromData();
+                }}
+            />
+            <TTPoll
+                state={enterTextVisible}
+                setState={setEnterTextVisible}
+                title="Enter Bucket Text"
+                overrideTitleStyle={{fontSize: 36}}
+                mainText="Paste in bucket text below"
+                acceptText="Ok"
+                multiline={true}
+                numberOfLines={1}
+                textState={connectionData}
+                setTextState={setConnectionData}
+                overrideTextInputStyle={{...globalTextStyles.labelText, height: 20*vh}}
+                enterCallback={() => {
+                    setEnteredPassword("");
+                    setTimeout(() => {setEnterPasswordVisible(true)}, 500)
+                }}
             />
 
             { !scanned && <BarCodeScannerLayout/> }

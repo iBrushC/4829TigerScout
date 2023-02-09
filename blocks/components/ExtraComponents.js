@@ -2,13 +2,14 @@
 import * as React from 'react';
 import Modal from 'react-native-modal'
 import { LinearGradient } from 'expo-linear-gradient';
-import { StyleSheet, Animated, Easing, View, Text, Pressable } from 'react-native';
+import { StyleSheet, Animated, Easing, View, Text, Pressable, TouchableWithoutFeedback, Keyboard } from 'react-native';
 
 // Component Imports
 import { TTButton } from './ButtonComponents';
 import { vh, vw } from '../../common/Constants';
 import { ColorScheme as CS } from '../../common/ColorScheme';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
+import { TTTextInput } from './InputComponents';
 
 const TTGradient = (props) => {
     return (
@@ -86,11 +87,54 @@ const TTWarning = (props) => {
 };
 
 const TTPoll = (props) => {
-    <Modal>
-        <View style={{ flex: 1 }}>
+    const alertTitle = props.title ? props.title : "Alert";
+    const alertText = props.mainText ? props.mainText : "Something happened!";
+    const acceptText = props.acceptText ? props.acceptText : "Ok";
 
-        </View>
-    </Modal>
+    const setVisibility = () => {
+        if (props.setState != null && props.state != null ) {
+            props.setState(!props.state);
+        }
+    }
+
+    const additionalTextStyle = {color: CS.dark2, alignSelf: "center", marginHorizontal: 1*vh};
+
+    return (
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <Modal isVisible={props.state != null ? props.state : false}>
+            <View style={[{...globalContainerStyles.popupContainer, backgroundColor: CS.light2}, props?.overrideViewStyle]}>
+                <Text style={[{...globalTextStyles.primaryText, ...additionalTextStyle}, props?.overrideTitleStyle]}>
+                    {alertTitle}
+                </Text>
+                <Text style={[{...globalTextStyles.labelText, ...additionalTextStyle}, props?.overrideMainTextStyle]}>
+                    {alertText}
+                </Text>
+                <TTTextInput
+                    state={props?.textState}
+                    setState={props?.setTextState}
+                    placeholder={props?.placeholder}
+                    placeholderTextColor={`${CS.light1}50`}
+                    multiline={props?.multiline}
+                    maxLength={props?.maxLength}
+                    numberOfLines={props?.numberOfLines}
+                    style={[
+                        {...globalInputStyles.numberInput, borderWidth: 0, width: "90%"},
+                        props?.overrideTextInputStyle
+                    ]}
+                />
+                <TTButton
+                    text={acceptText}
+                    buttonStyle={[{...globalButtonStyles.primaryButton}, props?.overrideButtonStyle]}
+                    textStyle={[{...globalTextStyles.primaryText, fontSize: 24, margin: 1 * vh}, props?.overrideTitleStyle]}
+                    onPress={() => {
+                        props.enterCallback?.();
+                        setVisibility();
+                    }}
+                />
+            </View>
+        </Modal>
+        </TouchableWithoutFeedback>
+    );
 };
 
 const TTConfirmation = (props) => {

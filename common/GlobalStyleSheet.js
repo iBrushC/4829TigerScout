@@ -29,7 +29,7 @@ const globalButtonStyles = StyleSheet.create({
     secondaryButton: {
         // Spacing and positioning
         width: "90%",
-        flexDirection: "row",
+        // flexDirection: "row",
 
         padding: 2*vw,
         margin: 1*vh,
@@ -83,7 +83,6 @@ const globalButtonStyles = StyleSheet.create({
     },
     matchKeyButton: {
         // Spacing and positioning
-        width: "90%",
         flexDirection: "row",
 
         padding: 2*vw,
@@ -214,6 +213,7 @@ const globalContainerStyles = StyleSheet.create({
     viewBackground: {
         position: "absolute",
         alignSelf: "center",
+        top: 0,
         width: "100%",
         height: "100%",
     },

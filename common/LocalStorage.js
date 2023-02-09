@@ -20,6 +20,7 @@ import { concurrency } from './Constants';
 
 // Constants
 const settingsKey = "@settingsKey";
+const cloudCacheKey = "@cloudCacheKey";
 const delimiter = String.fromCharCode(29);
 
 // Take a list of data and packs it into a string. Only works with lists numbers and strings
@@ -152,9 +153,27 @@ const loadSettings = async () => {
     }
 }
 
+// Helper function to save cloud cache
+const saveCloudCache = async (cloudData) => {
+    const stringData = JSON.stringify(cloudData);
+    return await writeData(stringData, cloudCacheKey);
+}
+
+// Helper function to load cloud cache
+const loadCloudCache = async () => {
+    const loadedCache = await readData(cloudCacheKey);
+    try {
+        const parsedData = JSON.parse(loadedCache);
+        return parsedData;
+    } catch (e) {
+        return null;
+    }
+}
+
 // Exports
 export { 
     settingsKey,
+    cloudCacheKey,
     delimiter,
     readData,
     readMultipleDataKeys,
@@ -169,4 +188,6 @@ export {
     deleteMultipleDataKeys,
     removeNonMatchKeys,
     loadSettings,
+    saveCloudCache,
+    loadCloudCache,
 }
