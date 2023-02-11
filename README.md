@@ -6,7 +6,7 @@ TigerScout is a easy, open source cloud-integrated scouting app made by 4829. It
 - Fast and hassle-free per-team cloud storage with support with multiple folders
 - Clean and easy user interface
 - Team analytics, including averages and performance-over-time graphs for different statistics.
-- 
+
 ## Storage
 TigerScout uses Firebase storage buckets to store data in the cloud, which you can see how to set up in the *Making a Bucket* section. However, because connection to the internet can be iffy in competitions, data is first stored locally on each device before being uploaded when the internet is available. 
 
