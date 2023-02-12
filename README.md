@@ -30,8 +30,39 @@ Additionally, data from the cloud is downloaded and stored locally until a manua
 		- If you don't have a functioning front camera, you can press **Enter Text**. Paste in the given code and press **Ok**. You'll be prompted with a password. If the correct password is entered, you will be automatically connected to the bucket
 
 ## Making a Bucket
-(INCLUDE INSTRUCTIONS HERE FOR HOW TO MAKE A BUCKET WITH FIREBASE)
-(INCLUDE INSTRUCTIONS FOR USING ONLINE TOOL ONCE I MAKE IT)
+To get started, go to https://console.firebase.google.com and either log in or create an account. From here, you should be able to press **Add project**. Choose a name that makes sense, disable Google Analytics (or don't, TigerScout just doesn't use them), then press **Create project**. In the console, you should see a gear icon next to **Project Overview**: click it, then select **Project settings**. Scroll down to the bottom where it says **Your apps** and select the button with `</>` as the icon. Register the app as "TigerScout", continue then continue again back to the console.
+
+Follow https://firebase.google.com/docs/storage/web/start#create-default-bucket to set up storage. Set the storage rules to 
+```
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read: if true;
+      allow create, update: if true;
+      allow delete: if false;
+    }
+  }
+}
+```
+This gives all users read and write access, but only allows the owner of the bucket to delete files through the console. Keep in mind that **TigerScout does not use authentication, which is why you shouldn't give your code and password to anyone you don't trust**.
+
+Once everything above is set up, go to [INSERT LINK TO WEBTOOLS HERE] and use the code generator tool. 
+- **Bucket Name** is whatever name you want to show up in the app, and does not have to be connected to your Firebase bucket name. 
+- **Cloud Config** is all the settings required to connect to your bucket, which you can find by going to your project settings and scrolling to the bottom. Copy and paste the `firebaseConfig` variable definition and paste it in, it should look like this:
+```
+const firebaseConfig = {
+  apiKey: "[your apiKey]",
+  authDomain: "[your authDomain]",
+  projectId: "[your projectId]",
+  storageBucket: "[your storageBucket]",
+  messagingSenderId: "[your messagingSenderId]",
+  appId: "[your appId]"
+};
+```
+- **Subpath** is the subfolder where anyone who uses the code will send their data to. This could be used for multiple competitions, or and A and B team using the same bucket. 
+- **Editor Permissions** allows the person who scans the code to upload to the bucket. If you just want someone to be able to see your data but not upload to it, uncheck this.
+- **Password** is the password to get into the bucket. Everyone who connects through the code will have to enter the password correctly before being able to connect.
 
 ## Security Notice
 While measures have been put in place to ensure that unwanted users cannot access edit data, I am far from a professional in cybersecurity and cannot guarantee security. To ensure that unwanted users don't have edit access to your data, do not share your bucket password with anyone you don't know and trust. If you wish to share data with someone you don't know, give them a code where they are only given viewer permissions (as seen in *Making a Bucket*) and enter the password for them.
