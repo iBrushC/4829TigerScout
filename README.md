@@ -64,5 +64,7 @@ const firebaseConfig = {
 - **Editor Permissions** allows the person who scans the code to upload to the bucket. If you just want someone to be able to see your data but not upload to it, uncheck this.
 - **Password** is the password to get into the bucket. Everyone who connects through the code will have to enter the password correctly before being able to connect.
 
+Then click **Create QR Code**. If something was entered wrong an error will pop up at the top, otherwise a QR and text code will be generated. You can download a 2000x2000px version with the **Download** button. If any team members don't have a functioning camera they can connect with the text code that appears below the QR code.
+
 ## Security Notice
 While measures have been put in place to ensure that unwanted users cannot access edit data, I am far from a professional in cybersecurity and cannot guarantee security. To ensure that unwanted users don't have edit access to your data, do not share your bucket password with anyone you don't know and trust. If you wish to share data with someone you don't know, give them a code where they are only given viewer permissions (as seen in *Making a Bucket*) and enter the password for them.
