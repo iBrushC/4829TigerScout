@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="webtools/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.1/qrcode.min.js"></script>
+    <script src="./webtools/index.js"></script>
+    <title>TigerScout Webtools</title>
+</head>
+<body>
+    <div class="columnContainer">
+        <h1 class="title selfCenter">TigerScout Webtools</h1>
+
+        <!-- QR Code Generator -->
+        <div class="columnContainer">
+            <!-- Error header -->
+            <div class="errorContainer itemsCenter" id="QRerror">
+                <p>Error</p>
+            </div>
+            <div class="sectionContainer">
+                <!-- Enter settings -->
+                <div style="flex-grow: 1;" class="columnContainer itemsCenter">
+                    <h1 class="subtitle">Enter Bucket Settings</h1>
+    
+                    <div class="rowContainer itemsCenter">
+                        <p class="inputLabel">Bucket Name</p>
+                        <input 
+                            id="QRbucketName" 
+                            class="textInput" 
+                            spellcheck="false"
+                            maxlength="32"
+                        >
+                    </div>
+                    <div class="rowContainer">
+                        <p class="inputLabel">Cloud Config</p>
+                        <textarea id="QRcloudConfig" class="textInput" rows="8" spellcheck="false"></textarea>
+                    </div>
+                    <div class="rowContainer">
+                        <p class="inputLabel">Subpath</p>
+                        <input 
+                            id="QRsubpath" 
+                            class="textInput" 
+                            spellcheck="false"
+                            maxlength="32"
+                        >
+                    </div>
+                    <div class="rowContainer">
+                        <p class="inputLabel">Editor Permissions?</p>
+                        <input 
+                            id="QReditorPermissions" 
+                            class="checkbox" 
+                            type="checkbox" 
+                            checked="true"
+                        >
+                    </div>
+    
+                    <div class="rowContainer">
+                        <p class="inputLabel">Password</p>
+                        <input 
+                            id="QRpassword" 
+                            class="textInput" 
+                            spellcheck="false"
+                            maxlength="32"
+                        >
+                    </div>
+    
+                    <br><br><br>
+                    <button onclick="generateQRFromData();">Create QR Code</button>
+                    <br><br>
+                </div>
+    
+                <div class="verticalSpacer"></div>
+    
+                <!-- Show generated code -->
+                <div style="flex-grow: 0.7;" class="columnContainer itemsCenter">
+                    <h1 class="subtitle">Generated Code</h1>
+                    <canvas id="QRcanvas"></canvas>
+                    
+                    <br>
+                    <a style="display:none" href="" download="qrconnect.png" id="QRdownload">Download</a>
+
+                    <p class="miniTitle">Text Code:</p>
+                    <p class="textCode expandHorizontal" id="QRtext" ></p>
+                </div>
+            </div>
+        </div>
+
+        <br><br>
+
+        <!-- CSV data downloader -->
+
+    </div>
+</body>
+</html>

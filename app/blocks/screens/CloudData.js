@@ -2,10 +2,10 @@
 import * as React from 'react';
 import { getStorage } from 'firebase/storage';
 import { getApp, getApps } from "firebase/app";
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
 
 // Component imports
-import { vh, vw } from '../../common/Constants';
+import { vh, vw, fU } from '../../common/Constants';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { readStringFromCloud, initializeFirebaseFromSettings, getAllFilesFromCloud, downloadAllFilesFromCloud, uploadMultipleStringsToCloud } from '../../common/CloudStorage';
 import { TTButton, TTSimpleCheckbox } from '../components/ButtonComponents';
@@ -14,7 +14,7 @@ import { loadCloudCache, loadSettings, saveCloudCache } from '../../common/Local
 import { ColorScheme as CS } from '../../common/ColorScheme';
 import { TTDropdown } from '../components/InputComponents';
 
-const sortableValues = ["Team Number", "Auto Points", "Teleop Points", "Misses", "Docking"];
+const sortableValues = ["Team Number", "Auto Points", "Teleop Points", "Misses", "Cubes", "Cones", "Docking"];
 const sortableKeys = [null, "auto", "teleop", "misses", "docking"];
 
 // Main function
@@ -40,20 +40,24 @@ const CloudData = ({route, navigation}) => {
         const teamAverages = {};
         // Loop over every team
         for (const teamNumber of Object.keys(teamData)) {
-            const averages = { auto: 0, teleop: 0, misses: 0, docking: 0 };
+            const averages = { auto: 0, teleop: 0, misses: 0, cubes: 0, cones: 0, docking: 0 };
             const count = teamData[teamNumber].length;
-            // For every dataArray (match data), add to the average for each stat
-            for (const dataArray of teamData[teamNumber]) {
+            // For every md (match data), add to the average for each stat
+            for (const md of teamData[teamNumber]) {
                 // This is horrible
-                averages.auto += 6*Number(dataArray[7]) + 4*Number(dataArray[8])+ 3*Number(dataArray[9]);
-                averages.teleop += 5*Number(dataArray[11]) + 3*Number(dataArray[12]) + 2*Number(dataArray[13]);
-                averages.misses += Number(dataArray[10]) + Number(dataArray[14]);
-                averages.docking += 8*Number(dataArray[5]) + 4*Number(dataArray[6]) + 6*Number(dataArray[15]) + 4*Number(dataArray[16]);
+                averages.auto += 6*(Number(md[7])+Number(md[10])) + 4*(Number(md[8])+Number(md[11]))+ 3*(Number(md[9])+Number(md[12]));
+                averages.teleop += 5*(Number(md[14])+Number(md[17])) + 3*(Number(md[15])+Number(md[18]))+ 2*(Number(md[16])+Number(md[19]));
+                averages.misses += Number(md[13]) + Number(md[20]);
+                averages.cubes += Number(md[7])+Number(md[8])+Number(md[9]) + Number(md[14])+Number(md[15])+Number(md[16]);
+                averages.cones += Number(md[10])+Number(md[11])+Number(md[12]) + Number(md[17])+Number(md[18])+Number(md[19]);
+                averages.docking += 8*Number(md[5]) + 4*Number(md[6]) + 6*Number(md[21]) + 4*Number(md[22]);
             }
             // Average out and round
             averages.auto = Math.round(10*averages.auto / count) / 10;
             averages.teleop = Math.round(10*averages.teleop / count) / 10;
             averages.misses = Math.round(10*averages.misses / count) / 10;
+            averages.cubes = Math.round(10*averages.cubes / count) / 10;
+            averages.cones = Math.round(10*averages.cones / count) / 10;
             averages.docking = Math.round(10*averages.docking / count) / 10;
 
             teamAverages[teamNumber] = averages;
@@ -99,7 +103,7 @@ const CloudData = ({route, navigation}) => {
                 setStatistics(calculateAverages(loadedCache));
             }
         };
-
+        
         initializeFirebaseFromSettings();
         wrapper();
     }, []);
@@ -112,6 +116,7 @@ const CloudData = ({route, navigation}) => {
         const downloadedData = await downloadAllFilesFromCloud(storage, settings.subpath ? settings.subpath : "");
         await saveCloudCache(downloadedData);
         setCloudData(downloadedData);
+        setTeamOrder(Object.keys(downloadedData));
         setStatistics(calculateAverages(downloadedData));
 
         setLoadingVisible(false);
@@ -119,8 +124,8 @@ const CloudData = ({route, navigation}) => {
 
     // Special case that's not worth making a TTButton or globalButtonStyle for
     const MatchKeyButton = (props) => {
-        const topLabelStyle = {...globalTextStyles.secondaryText, color: CS.dark3, fontSize: 16};
-        const bottomLabelStyle = {...globalTextStyles.secondaryText, color: CS.dark1, fontSize: 24, margin: -1*vh};
+        const topLabelStyle = {...globalTextStyles.secondaryText, color: CS.dark3, fontSize: 16*fU};
+        const bottomLabelStyle = {...globalTextStyles.secondaryText, color: CS.dark1, fontSize: 24*fU, margin: -1*vh};
 
         return (
             <View style={{...globalContainerStyles.rowContainer, backgroundColor: CS.light1, marginVertical: 1.3*vh, marginHorizontal: 2.6*vh, borderRadius: 1*vw}} key={props.id}>
@@ -128,7 +133,7 @@ const CloudData = ({route, navigation}) => {
                     <TTButton
                         text={props.teamNumber}
                         buttonStyle={{...globalButtonStyles.secondaryButton, width: 20*vw, paddingVertical: 2*vh, margin: 0, left: 0, borderTopRightRadius: 0, borderBottomRightRadius: 0}}
-                        textStyle={{...globalTextStyles.primaryText, fontSize: 24}}
+                        textStyle={{...globalTextStyles.primaryText, fontSize: 24*fU}}
                          // Maybe include rankings ?
                         onPress={
                             () => {
@@ -181,7 +186,7 @@ const CloudData = ({route, navigation}) => {
                 <TTButton
                     text="Go To Settings"
                     buttonStyle={{...globalButtonStyles.primaryButton, width: "70%", margin: 2 * vh}}
-                    textStyle={{...globalTextStyles.primaryText, fontSize: 36, marginTop: 0.5*vh}}
+                    textStyle={{...globalTextStyles.primaryText, fontSize: 36*fU, marginTop: 0.5*vh}}
                     onPress={() => {navigation.navigate("Settings")}}
                 />
             </View>
@@ -201,14 +206,14 @@ const CloudData = ({route, navigation}) => {
             
             <View style={{...globalContainerStyles.centerContainer, flex: 0, height: 20*vh, zIndex: 5}}>
                 <TTGradient/>
-                {/* <Text style={{...globalTextStyles.primaryText, fontSize: 16}}>
+                {/* <Text style={{...globalTextStyles.primaryText, fontSize: 16*fU}}>
                     Youre connected to {getApp().options.projectId}
                 </Text> */}
                 <View style={{flexDirection: "row", justifyContent: "space-evenly", marginTop: 1*vh, zIndex: 4}}>
                     <TTButton
                         text="⟳"
                         buttonStyle={{...globalButtonStyles.primaryButton, width: 7*vh, aspectRatio: 1, margin: 2*vh}}
-                        textStyle={{color: CS.light1, fontSize: 24, marginLeft: 0.75*vh}}
+                        textStyle={{color: CS.light1, fontSize: 32*fU, marginTop: (Platform.OS !== 'ios') ? -1.5*vh : 0 }}
                         onPress={downloadAndStoreCloudData}
                     />
                     <Text style={globalTextStyles.labelText}>Sort By...</Text>
@@ -239,7 +244,7 @@ const CloudData = ({route, navigation}) => {
                     }}
                     text="Reverse Order?" 
                     overallStyle={{alignSelf: "center"}}
-                    textStyle={{...globalTextStyles.labelText, fontSize: 14}}
+                    textStyle={{...globalTextStyles.labelText, fontSize: 14*fU}}
                     boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
                     boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                 />

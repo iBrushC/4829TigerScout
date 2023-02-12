@@ -125,7 +125,7 @@ const saveMatchData = async (data) => {
 // Reads the data stored at a key value. Returns false if there was an error, returns list of data otherwise.
 const loadMatchData = async (key) => {
     const data = await readData(key);
-    if (compressData == false) {
+    if (data == false) {
         return null;
     } else {
         const listData = deserializeData(data);

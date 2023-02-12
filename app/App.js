@@ -14,6 +14,10 @@ import CloudData from './blocks/screens/CloudData';
 import TeamAnalytics from './blocks/screens/TeamAnalytics';
 import Settings from './blocks/screens/Settings';
 
+// Component imports
+import { ColorScheme as CS } from './common/ColorScheme';
+import { fU, vh } from './common/Constants';
+
 // Navigation setup (https://reactnavigation.org/docs very useful)
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +55,13 @@ const App = () => {
         return null;
     }
 
+    const headerStyles = {
+        headerStyle: styles.headerStyle, 
+        headerTitleStyle: styles.headerTitleStyle,
+        headerBackTitleStyle: styles.headerBackTitleStyle,
+        headerTintColor: `${CS.light2}99`,
+    }
+
     // Stack navigator setup
     return (
         <NavigationContainer>
@@ -62,27 +73,27 @@ const App = () => {
                 </Stack.Screen>
 
                 {/* Scouting screen */}
-                <Stack.Screen name="ScoutTeam" options={{title: "Scout Team"}}>
+                <Stack.Screen name="ScoutTeam" options={{title: "Scout Team", ...headerStyles}}>
                     {(props) => <ScoutTeam {...props}/>}
                 </Stack.Screen>
 
                 {/* Local data screen */}
-                <Stack.Screen name="LocalData" options={{title: "Local Data"}}>
+                <Stack.Screen name="LocalData" options={{title: "Local Data", ...headerStyles}}>
                     {(props) => <LocalData {...props}/>}
                 </Stack.Screen>
 
                 {/* Cloud data screen */}
-                <Stack.Screen name="CloudData" options={{title: "Cloud Data"}}>
+                <Stack.Screen name="CloudData" options={{title: "Cloud Data", ...headerStyles}}>
                     {(props) => <CloudData {...props}/>}
                 </Stack.Screen>
 
                 {/* Team analytic screen */}
-                <Stack.Screen name="TeamAnalytics" options={({route}) => ({title: `Team ${route.params.teamNumber}`})}>
+                <Stack.Screen name="TeamAnalytics" options={({route}) => ({title: `Team ${route.params.teamNumber}`, ...headerStyles})}>
                     {(props) => <TeamAnalytics {...props}/>}
                 </Stack.Screen>
 
                 {/* Settings screen */}
-                <Stack.Screen name="Settings" options={{title: "Settings"}}>
+                <Stack.Screen name="Settings" options={{title: "Settings", ...headerStyles}}>
                     {(props) => <Settings {...props}/>}
                 </Stack.Screen>
 
@@ -90,6 +101,21 @@ const App = () => {
         </NavigationContainer>
     );
 }
+
+const styles = StyleSheet.create({
+    headerStyle: {
+        backgroundColor: CS.header,
+        height: 20*vh
+    },
+    headerTitleStyle: {
+        fontFamily: "Bebas",
+        fontSize: 24 * fU,
+        color: CS.light2
+    },
+    headerBackTitleStyle: {
+        // Doesnt work ??
+    }
+});
 
 // Exports
 export default App;

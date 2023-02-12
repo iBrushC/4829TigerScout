@@ -61,23 +61,22 @@ const Settings = ({route, navigation}) => {
 
         // Loading firebase from settings
         initializeFirebaseFromSettings();
-        
-        const sampleSettings = {
-            "bucketName": "4829 Scoutbucket",
-            "cloudConfig": {
-                "apiKey": "AIzaSyAQwBk8GzpPkvUnrKPS7IBdNHFOArPjToo",
-                "authDomain": "scouting-ed3f1.firebaseapp.com",
-                "projectId": "scouting-ed3f1",
-                "storageBucket": "scouting-ed3f1.appspot.com",
-                "messagingSenderId": "601336489441",
-                "appId": "1:601336489441:web:ea260c66605836b0cc9ea0"
-            },
-            "subpath": "testFolder/",
-            "permissions": "editor"
-        }
-        // const encrypted = CryptoJS.AES.encrypt(JSON.stringify(sampleSettings), "weehaw4829!");
-        // console.log(encrypted.toString());
 
+        // !! REMOVE !!
+        // const sampleSettings = {
+        //     "bucketName": "4829 Scoutbucket",
+        //     "cloudConfig": {
+        //         "apiKey": "AIzaSyAQwBk8GzpPkvUnrKPS7IBdNHFOArPjToo",
+        //         "authDomain": "scouting-ed3f1.firebaseapp.com",
+        //         "projectId": "scouting-ed3f1",
+        //         "storageBucket": "scouting-ed3f1.appspot.com",
+        //         "messagingSenderId": "601336489441",
+        //         "appId": "1:601336489441:web:ea260c66605836b0cc9ea0"
+        //     },
+        //     "subpath": "testFolder/",
+        //     "permissions": "reader"
+        // };
+        // console.log(CryptoJS.AES.encrypt(JSON.stringify(sampleSettings), "weehaw4829!").toString());
     }, []);
 
     // Checks to make sure permission exists
@@ -237,8 +236,6 @@ const Settings = ({route, navigation}) => {
                         <TTButton 
                             text="Enter Text" 
                             onPress={() => {
-                                var cipher  = CryptoJS.AES.encrypt("4829", "weehaw4829!");
-                                console.log("Encrypted: ", cipher.toString());
                                 setConnectionData("");
                                 setEnterTextVisible(true);
                             }}
@@ -284,12 +281,13 @@ const Settings = ({route, navigation}) => {
                 setState={setEnterPasswordVisible}
                 title="Enter Password"
                 overrideTitleStyle={{fontSize: 30}}
-                mainText="Enter the bucket's password to connect (16 characters max)"
+                mainText="Enter the bucket's password to connect (32 characters max)"
                 acceptText="Ok"
+                secureTextEntry={true}
                 textState={enteredPassword}
                 setTextState={setEnteredPassword}
                 overrideTextInputStyle={{...globalTextStyles.labelText, height: 8*vh}}
-                maxLength={16}
+                maxLength={32}
                 enterCallback={() => {
                     connectFromData();
                 }}

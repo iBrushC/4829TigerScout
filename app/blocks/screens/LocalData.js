@@ -7,7 +7,7 @@ import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Component Imports
-import { vh, vw } from '../../common/Constants';
+import { fU, vh, vw } from '../../common/Constants';
 import { ColorScheme as CS } from '../../common/ColorScheme';
 import { TTGradient, TTConfirmation, TTLoading, TTWarning, TTAlert } from '../components/ExtraComponents';
 import { initializeFirebaseFromSettings, uploadStringToCloud, getAllFilesFromRef, uploadMultipleStringsToCloud } from '../../common/CloudStorage';
@@ -225,7 +225,7 @@ const LocalData = ({route, navigation}) => {
 				{matchKeys.length > 0 && <TTButton
 					text="Delete Local Data"
 					buttonStyle={{...globalButtonStyles.secondaryButton, width: "90%", margin: 1 * vh}}
-					textStyle={{...globalTextStyles.primaryText, fontSize: 16}}
+					textStyle={{...globalTextStyles.primaryText, fontSize: 16 * fU}}
 					onPress={() => {
 						setConfirmationVisible(true);
 						setConfirmationContent([null, `Are you sure you want to delete all ${matchKeys.length} files? You wont be able to get them back.`, null, null]);
@@ -242,7 +242,7 @@ const LocalData = ({route, navigation}) => {
 					<TTButton
 						text="Upload Data To Cloud"
 						buttonStyle={{...globalButtonStyles.primaryButton, width: "90%", margin: 2 * vh}}
-						textStyle={{...globalTextStyles.primaryText, fontSize: 24}}
+						textStyle={{...globalTextStyles.primaryText, fontSize: 24 * fU}}
 						onPress={() => {uploadDataToCloud()}}
 					/>
 				}

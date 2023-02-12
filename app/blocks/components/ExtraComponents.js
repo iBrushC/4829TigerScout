@@ -6,7 +6,7 @@ import { StyleSheet, Animated, Easing, View, Text, Pressable, TouchableWithoutFe
 
 // Component Imports
 import { TTButton } from './ButtonComponents';
-import { vh, vw } from '../../common/Constants';
+import { vh, vw, fU } from '../../common/Constants';
 import { ColorScheme as CS } from '../../common/ColorScheme';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { TTTextInput } from './InputComponents';
@@ -45,7 +45,7 @@ const TTAlert = (props) => {
                 <TTButton
                     text={acceptText}
                     buttonStyle={[{...globalButtonStyles.primaryButton}, props?.overrideButtonStyle]}
-                    textStyle={[{...globalTextStyles.primaryText, fontSize: 24, margin: 1 * vh}, props?.overrideTitleStyle]}
+                    textStyle={[{...globalTextStyles.primaryText,  fontSize: 24*fU, margin: 1 * vh}, props?.overrideTitleStyle]}
                     onPress={setVisibility}
                 />
             </View>
@@ -78,7 +78,7 @@ const TTWarning = (props) => {
                 <TTButton
                     text={acceptText}
                     buttonStyle={[{...globalButtonStyles.primaryButton, backgroundColor: CS.light2, marginTop: 3*vh}, props?.overrideButtonStyle]}
-                    textStyle={[{...globalTextStyles.primaryText, color: CS.dark1, fontSize: 24, margin: 1 * vh}, props?.overrideTitleStyle]}
+                    textStyle={[{...globalTextStyles.primaryText, color: CS.dark1,  fontSize: 24*fU, margin: 1 * vh}, props?.overrideTitleStyle]}
                     onPress={setVisibility}
                 />
             </View>
@@ -117,6 +117,7 @@ const TTPoll = (props) => {
                     multiline={props?.multiline}
                     maxLength={props?.maxLength}
                     numberOfLines={props?.numberOfLines}
+                    secureTextEntry={props?.secureTextEntry}
                     style={[
                         {...globalInputStyles.numberInput, borderWidth: 0, width: "90%"},
                         props?.overrideTextInputStyle
@@ -125,7 +126,7 @@ const TTPoll = (props) => {
                 <TTButton
                     text={acceptText}
                     buttonStyle={[{...globalButtonStyles.primaryButton}, props?.overrideButtonStyle]}
-                    textStyle={[{...globalTextStyles.primaryText, fontSize: 24, margin: 1 * vh}, props?.overrideTitleStyle]}
+                    textStyle={[{...globalTextStyles.primaryText,  fontSize: 24*fU, margin: 1 * vh}, props?.overrideTitleStyle]}
                     onPress={() => {
                         props.enterCallback?.();
                         setVisibility();
@@ -164,7 +165,7 @@ const TTConfirmation = (props) => {
                     <TTButton
                         text={rejectText}
                         buttonStyle={[{...globalButtonStyles.primaryButton, margin: 0}, props?.overrideButtonStyle]}
-                        textStyle={[{...globalTextStyles.primaryText, fontSize: 24, margin: 1 * vh}, props?.overrideTitleStyle]}
+                        textStyle={[{...globalTextStyles.primaryText,  fontSize: 24*fU, margin: 1 * vh}, props?.overrideTitleStyle]}
                         onPress={() => {
                             props.rejectCallback?.();
                             setVisibility();
@@ -173,7 +174,7 @@ const TTConfirmation = (props) => {
                     <TTButton
                         text={acceptText}
                         buttonStyle={[{...globalButtonStyles.primaryButton, margin: 0}, props?.overrideButtonStyle]}
-                        textStyle={[{...globalTextStyles.primaryText, fontSize: 24, margin: 1 * vh}, props?.overrideTitleStyle]}
+                        textStyle={[{...globalTextStyles.primaryText,  fontSize: 24*fU, margin: 1 * vh}, props?.overrideTitleStyle]}
                         onPress={() => {
                             props.acceptCallback?.();
                             setVisibility();
@@ -231,7 +232,7 @@ const TTLoading = (props) => {
                 <TTButton
                     text={acceptText}
                     buttonStyle={[{...globalButtonStyles.primaryButton, backgroundColor: CS.light3}, props?.overrideButtonStyle]}
-                    textStyle={[{...globalTextStyles.primaryText, color: CS.dark1, fontSize: 20}, props?.overrideTitleStyle]}
+                    textStyle={[{...globalTextStyles.primaryText, color: CS.dark1, fontSize: 20*fU}, props?.overrideTitleStyle]}
                     onPress={setVisibility}
                 />
             </View>

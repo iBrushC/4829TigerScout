@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, ScrollView, KeyboardAvoidingView } from 
 import { LinearGradient } from 'expo-linear-gradient';
 
 // Component imports
-import { vh, vw } from '../../common/Constants';
+import { fU, vh, vw } from '../../common/Constants';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton, TTCheckbox, TTPushButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { TTCounterInput, TTDropdown, TTNumberInput, TTTextInput } from '../components/InputComponents';
@@ -27,15 +27,27 @@ const ScoutTeam = ({route, navigation}) => {
     const [taxi, setTaxi] = React.useState(false);
     const [autoDocked, setAutoDocked] = React.useState(false);
     const [autoEngaged, setAutoEngaged] = React.useState(false);
-    const [autoHigh, setAutoHigh] = React.useState("0");
-    const [autoMid, setAutoMid] = React.useState("0");
-    const [autoLow, setAutoLow] = React.useState("0");
-    const [autoMisses, setAutoMisses] = React.useState("0");
+    const [autoPoints, setAutoPoints] = React.useState({
+        cubeHigh: "0", cubeMid: "0", cubeLow: "0", 
+        coneHigh: "0", coneMid: "0", coneLow: "0", 
+        misses: "0",
+    });
+    const setAutoPointParam = (parameter, value) => {
+        const temp = {...autoPoints};
+        temp[parameter] = value;
+        setAutoPoints(temp);
+    }
 
-    const [teleHigh, setTeleHigh] = React.useState("0");
-    const [teleMid, setTeleMid] = React.useState("0");
-    const [teleLow, setTeleLow] = React.useState("0");
-    const [teleMisses, setTeleMisses] = React.useState("0");
+    const [telePoints, setTelePoints] = React.useState({
+        cubeHigh: "0", cubeMid: "0", cubeLow: "0", 
+        coneHigh: "0", coneMid: "0", coneLow: "0", 
+        misses: "0",
+    });
+    const setTelePointParam = (parameter, value) => {
+        const temp = {...telePoints};
+        temp[parameter] = value;
+        setTelePoints(temp);
+    }
     
     const [teleDocked, setTeleDocked] = React.useState(false);
     const [teleEngaged, setTeleEngaged] = React.useState(false);
@@ -59,16 +71,22 @@ const ScoutTeam = ({route, navigation}) => {
             taxi ? 1 : 0,
             autoDocked ? 1 : 0,
             autoEngaged ? 1 : 0,
-            formatNumericState(autoHigh),
-            formatNumericState(autoMid),
-            formatNumericState(autoLow),
-            formatNumericState(autoMisses),
+            formatNumericState(autoPoints.cubeHigh),
+            formatNumericState(autoPoints.cubeMid),
+            formatNumericState(autoPoints.cubeLow),
+            formatNumericState(autoPoints.coneHigh),
+            formatNumericState(autoPoints.coneMid),
+            formatNumericState(autoPoints.coneLow),
+            formatNumericState(autoPoints.misses),
 
             // Teleop
-            formatNumericState(teleHigh),
-            formatNumericState(teleMid),
-            formatNumericState(teleLow),
-            formatNumericState(teleMisses),
+            formatNumericState(telePoints.cubeHigh),
+            formatNumericState(telePoints.cubeMid),
+            formatNumericState(telePoints.cubeLow),
+            formatNumericState(telePoints.coneHigh),
+            formatNumericState(telePoints.coneMid),
+            formatNumericState(telePoints.coneLow),
+            formatNumericState(telePoints.misses),
             teleDocked ? 1 : 0,
             teleEngaged ? 1 : 0,
 
@@ -96,21 +114,25 @@ const ScoutTeam = ({route, navigation}) => {
         setTaxi(Number(data[4]) ? true : false);
         setAutoDocked(Number(data[5]) ? true : false);
         setAutoEngaged(Number(data[6]) ? true : false);
-        setAutoHigh(data[7]);
-        setAutoMid(data[8]);
-        setAutoLow(data[9]);
-        setAutoMisses(data[10]);
+        const autoPoints = {
+            cubeHigh: data[7], cubeMid: data[8], cubeLow: data[9],
+            coneHigh: data[10], coneMid: data[11], coneLow: data[12],
+            misses: data[13],
+        }
+        setAutoPoints(autoPoints);
 
         // Teleop
-        setTeleHigh(data[11]);
-        setTeleMid(data[12]);
-        setTeleLow(data[13]);
-        setTeleMisses(data[14]);
-        setTeleDocked(Number(data[15]) ? true : false);
-        setTeleEngaged(Number(data[16]) ? true : false);
+        const telePoints = {
+            cubeHigh: data[14], cubeMid: data[15], cubeLow: data[16],
+            coneHigh: data[17], coneMid: data[18], coneLow: data[19],
+            misses: data[20],
+        }
+        setTelePoints(telePoints);
+        setTeleDocked(Number(data[21]) ? true : false);
+        setTeleEngaged(Number(data[22]) ? true : false);
 
         // After Round
-        setComments(data[17]);
+        setComments(data[23]);
     }
 
     React.useEffect(() => {
@@ -120,6 +142,32 @@ const ScoutTeam = ({route, navigation}) => {
     }, [])
 
     const scrollRef = React.useRef(null);
+
+    // Ugly but necessary
+    const counterSettings = {
+        stateMin: 0,
+        stateMax: 99,
+        overallStyle: {justifySelf: "center", marginTop: 7*vh},
+        topButtonProps: {text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 8.5*vh, padding: 0}], textStyle: globalTextStyles.primaryText},
+        inputProps: {style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]},
+        bottomButtonProps: {text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 8.5*vh, padding: 0}], textStyle: globalTextStyles.primaryText}
+    }
+    const cubeCounterSettings = {
+        stateMin: 0,
+        stateMax: 99,
+        overallStyle: {justifySelf: "center", marginTop: 7*vh},
+        topButtonProps: {text: "+", buttonStyle: [{...globalButtonStyles.topCounterButton, backgroundColor: CS.cube}, {height: 8.5*vh, padding: 0}], textStyle: globalTextStyles.primaryText},
+        inputProps: {style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]},
+        bottomButtonProps: {text: "-", buttonStyle: [{...globalButtonStyles.bottomCounterButton, backgroundColor: CS.cube}, {height: 8.5*vh, padding: 0}], textStyle: globalTextStyles.primaryText}
+    }
+    const coneCounterSettings = {
+        stateMin: 0,
+        stateMax: 99,
+        overallStyle: {justifySelf: "center", marginTop: 7*vh},
+        topButtonProps: {text: "+", buttonStyle: [{...globalButtonStyles.topCounterButton, backgroundColor: CS.cone}, {height: 8.5*vh, padding: 0}], textStyle: globalTextStyles.primaryText},
+        inputProps: {style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]},
+        bottomButtonProps: {text: "-", buttonStyle: [{...globalButtonStyles.bottomCounterButton, backgroundColor: CS.cone}, {height: 8.5*vh, padding: 0}], textStyle: globalTextStyles.primaryText}
+    }
 
     return (
         <View style={globalContainerStyles.topContainer}>
@@ -185,74 +233,83 @@ const ScoutTeam = ({route, navigation}) => {
                 AUTO 
                 
                 */}
-                <View style={{height: 60*vh}}>
+                <View style={{height: 95*vh}}>
                     <TTGradient/>
 
                     {/* Might also make title a block (?) */}
                     <Text style={styles.sectionHeader}>Auto</Text>
                     
-                    {/* Row of all components */}
-                    <View style={{...styles.rowAlignContainer, flexGrow: 0.7}}>
-                        {/* Button Counters */}
-                        <View style={globalContainerStyles.columnContainer}>
-                            <Text style={styles.counterHeader}>High</Text>
-                            {/* Have got to find a better system than this */}
-                            <TTCounterInput
-                                state={autoHigh}
-                                setState={setAutoHigh}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                            />
-                        </View>
+                    <View style={{...styles.rowAlignContainer, flexGrow: 1}}>
+                        {/* Column for cube and cone high, middle, and low */}
+                        <View style={{...globalContainerStyles.columnContainer, flexGrow: 3}}>
+                            {/* Cubes */}
+                            <View style={{...styles.rowAlignContainer, flexGrow: 1}}>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cube High</Text>
+                                    <TTCounterInput
+                                        state={autoPoints.cubeHigh}
+                                        setState={(v) => setAutoPointParam("cubeHigh", v)}
+                                        {...cubeCounterSettings}
+                                    />
+                                </View>
 
-                        <View style={globalContainerStyles.columnContainer}>
-                            <Text style={styles.counterHeader}>Middle</Text>
-                            {/* Have got to find a better system than this */}
-                            <TTCounterInput
-                                state={autoMid}
-                                setState={setAutoMid}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                            />
-                        </View>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cube Mid</Text>
+                                    <TTCounterInput
+                                        state={autoPoints.cubeMid}
+                                        setState={(v) => setAutoPointParam("cubeMid", v)}
+                                        {...cubeCounterSettings}
+                                    />
+                                </View>
 
-                        <View style={globalContainerStyles.columnContainer}>
-                            <Text style={styles.counterHeader}>Low</Text>
-                            {/* Have got to find a better system than this */}
-                            <TTCounterInput
-                                state={autoLow}
-                                setState={setAutoLow}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                            />
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cube Low</Text>
+                                    <TTCounterInput
+                                        state={autoPoints.cubeLow}
+                                        setState={(v) => setAutoPointParam("cubeLow", v)}
+                                        {...cubeCounterSettings}
+                                    />
+                                </View>
+                            </View>
+                            {/* Cones */}
+                            <View style={{...styles.rowAlignContainer, flexGrow: 1}}>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cone High</Text>
+                                    <TTCounterInput
+                                        state={autoPoints.coneHigh}
+                                        setState={(v) => setAutoPointParam("coneHigh", v)}
+                                        {...coneCounterSettings}
+                                    />
+                                </View>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cone Mid</Text>
+                                    <TTCounterInput
+                                        state={autoPoints.coneMid}
+                                        setState={(v) => setAutoPointParam("coneMid", v)}
+                                        {...coneCounterSettings}
+                                    />
+                                </View>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cone Low</Text>
+                                    <TTCounterInput
+                                        state={autoPoints.coneLow}
+                                        setState={(v) => setAutoPointParam("coneLow", v)}
+                                        {...coneCounterSettings}
+                                    />
+                                </View>
+                            </View>
                         </View>
-
+                        {/* Misses */}
                         <View style={globalContainerStyles.columnContainer}>
                             <Text style={styles.counterHeader}>Misses</Text>
                             <TTCounterInput
-                                state={autoMisses}
-                                setState={setAutoMisses}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
+                                state={autoPoints.misses}
+                                setState={(v) => setAutoPointParam("misses", v)}
+                                {...counterSettings}
                             />
                         </View>
                     </View>
+
                     <View style={{...styles.rowAlignContainer, flexGrow: 0.3}}>
                         {/* Taxi */}
                         <TTSimpleCheckbox 
@@ -260,7 +317,7 @@ const ScoutTeam = ({route, navigation}) => {
                             setState={setTaxi}
                             text="Taxi?" 
                             overallStyle={{height: "100%", alignSelf: "center"}}
-                            textStyle={{...globalTextStyles.labelText, fontSize: 14}}
+                            textStyle={{...globalTextStyles.labelText, fontSize: 14*fU}}
                             boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
                             boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                         />
@@ -270,7 +327,7 @@ const ScoutTeam = ({route, navigation}) => {
                             setState={setAutoDocked}
                             text="Docked?" 
                             overallStyle={{height: "100%", alignSelf: "center"}}
-                            textStyle={{...globalTextStyles.labelText, fontSize: 14}}
+                            textStyle={{...globalTextStyles.labelText, fontSize: 14*fU}}
                             boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
                             boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                         />
@@ -280,7 +337,7 @@ const ScoutTeam = ({route, navigation}) => {
                             setState={setAutoEngaged}
                             text="Engaged?" 
                             overallStyle={{height: "100%", alignSelf: "center"}}
-                            textStyle={{...globalTextStyles.labelText, fontSize: 14}}
+                            textStyle={{...globalTextStyles.labelText, fontSize: 14*fU}}
                             boxUncheckedStyle={{...globalButtonStyles.checkboxUncheckedStyle}}
                             boxCheckedStyle={{...globalButtonStyles.checkboxCheckedStyle}}
                         />
@@ -293,69 +350,78 @@ const ScoutTeam = ({route, navigation}) => {
                 TELEOP 
                 
                 */}
-                <View style={{height: 55*vh}}>
+                <View style={{height: 85*vh}}>
                     <TTGradient/>
 
                     <Text style={styles.sectionHeader}>Teleop</Text>
                     
-                    <View style={styles.rowAlignContainer}>
-                        {/* Button Counters */}
-                        <View style={globalContainerStyles.columnContainer}>
-                            <Text style={styles.counterHeader}>High</Text>
-                            {/* Have got to find a better system than this */}
-                            <TTCounterInput
-                                state={teleHigh}
-                                setState={setTeleHigh}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                            />
-                        </View>
+                    <View style={{...styles.rowAlignContainer, flexGrow: 1}}>
+                        {/* Column for cube and cone high, middle, and low */}
+                        <View style={{...globalContainerStyles.columnContainer, flexGrow: 3}}>
+                            {/* Cubes */}
+                            <View style={{...styles.rowAlignContainer, flexGrow: 1}}>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cube High</Text>
+                                    <TTCounterInput
+                                        state={telePoints.cubeHigh}
+                                        setState={(v) => setTelePointParam("cubeHigh", v)}
+                                        {...cubeCounterSettings}
+                                    />
+                                </View>
 
-                        <View style={globalContainerStyles.columnContainer}>
-                            <Text style={styles.counterHeader}>Middle</Text>
-                            {/* Have got to find a better system than this */}
-                            <TTCounterInput
-                                state={teleMid}
-                                setState={setTeleMid}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                            />
-                        </View>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cube Mid</Text>
+                                    <TTCounterInput
+                                        state={telePoints.cubeMid}
+                                        setState={(v) => setTelePointParam("cubeMid", v)}
+                                        {...cubeCounterSettings}
+                                    />
+                                </View>
 
-                        <View style={globalContainerStyles.columnContainer}>
-                            <Text style={styles.counterHeader}>Low</Text>
-                            {/* Have got to find a better system than this */}
-                            <TTCounterInput
-                                state={teleLow}
-                                setState={setTeleLow}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                            />
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cube Low</Text>
+                                    <TTCounterInput
+                                        state={telePoints.cubeLow}
+                                        setState={(v) => setTelePointParam("cubeLow", v)}
+                                        {...cubeCounterSettings}
+                                    />
+                                </View>
+                            </View>
+                            {/* Cones */}
+                            <View style={{...styles.rowAlignContainer, flexGrow: 1}}>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cone High</Text>
+                                    <TTCounterInput
+                                        state={telePoints.coneHigh}
+                                        setState={(v) => setTelePointParam("coneHigh", v)}
+                                        {...coneCounterSettings}
+                                    />
+                                </View>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cone Mid</Text>
+                                    <TTCounterInput
+                                        state={telePoints.coneMid}
+                                        setState={(v) => setTelePointParam("coneMid", v)}
+                                        {...coneCounterSettings}
+                                    />
+                                </View>
+                                <View style={globalContainerStyles.columnContainer}>
+                                    <Text style={styles.counterHeader}>Cone Low</Text>
+                                    <TTCounterInput
+                                        state={telePoints.coneLow}
+                                        setState={(v) => setTelePointParam("coneLow", v)}
+                                        {...coneCounterSettings}
+                                    />
+                                </View>
+                            </View>
                         </View>
-
+                        {/* Misses */}
                         <View style={globalContainerStyles.columnContainer}>
                             <Text style={styles.counterHeader}>Misses</Text>
                             <TTCounterInput
-                                state={teleMisses}
-                                setState={setTeleMisses}
-                                stateMin={0}
-                                stateMax={255}
-                                overallStyle={{justifySelf: "center", marginTop: 7*vh}}
-                                topButtonProps={{text: "+", buttonStyle: [globalButtonStyles.topCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
-                                inputProps={{style: [globalInputStyles.numberInput, globalTextStyles.labelText, {width: "80%", height: "25%", margin: 0}]}}
-                                bottomButtonProps={{text: "-", buttonStyle: [globalButtonStyles.bottomCounterButton, {height: 60, padding: 0}], textStyle: globalTextStyles.primaryText}}
+                                state={telePoints.misses}
+                                setState={(v) => setTelePointParam("misses", v)}
+                                {...counterSettings}
                             />
                         </View>
                     </View>
@@ -416,7 +482,7 @@ const ScoutTeam = ({route, navigation}) => {
                     <TTButton
                         text="Save Data"
                         buttonStyle={{...globalButtonStyles.primaryButton, width: "90%", margin: 5*vh}}
-                        textStyle={{...globalTextStyles.primaryText, fontSize: 36}}
+                        textStyle={{...globalTextStyles.primaryText, fontSize: 36*fU}}
                         onPress={saveAndExit}
                     />
                 </View>
@@ -431,8 +497,8 @@ const ScoutTeam = ({route, navigation}) => {
 const styles = StyleSheet.create({
     sectionHeader: {
         ...globalTextStyles.primaryText, 
-        fontSize: 24, 
-        margin: 3*vh
+        fontSize: 24*fU, 
+        margin: 1.5*vh
     },
     topNumberInput: {
         ...globalInputStyles.numberInput, 
@@ -449,10 +515,10 @@ const styles = StyleSheet.create({
     },
     counterHeader: {
         ...globalTextStyles.labelText, 
-        fontSize: 20, 
+        fontSize: 15*fU, 
         alignSelf: "center", 
         position: "absolute", 
-        top: 0
+        top: 2.6*vh
     }
 });
 

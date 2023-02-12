@@ -6,7 +6,7 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 // Component Imports
-import { vh, vw } from '../../common/Constants';
+import { fU, vh, vw } from '../../common/Constants';
 import { globalButtonStyles, globalInputStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton, TTSimpleCheckbox } from '../components/ButtonComponents';
 import { ColorScheme as CS } from '../../common/ColorScheme';
@@ -14,7 +14,7 @@ import { TTGradient } from '../components/ExtraComponents';
 import { matchTypeValues, teamColorValues } from './ScoutTeam';
 import { TTDropdown } from '../components/InputComponents';
 
-const chartableValues = ["Auto Points", "Teleop Points", "High Cargo", "Mid Cargo", "Low Cargo", "Misses", "Docking"];
+const chartableValues = ["Auto Points", "Teleop Points", "High Cargo", "Mid Cargo", "Low Cargo", "Cubes", "Cones", "Misses", "Docking"];
 
 const TeamAnalytics = ({route, navigation}) => {
 
@@ -25,14 +25,14 @@ const TeamAnalytics = ({route, navigation}) => {
 
     const checkEmptyComments = () => {
         for (const match of route.params.teamData) {
-            if (match[17].length !== 0) return false;
+            if (match[23].length !== 0) return false;
         }
         return true;
     }
 
     const checkForDNP = () => {
         for (const match of route.params.teamData) {
-            const comment = match[17].toLowerCase();
+            const comment = match[23].toLowerCase().replaceAll("’", "'");
             if (
                 comment.includes("dnp") || 
                 comment.includes("don't pick") || 
@@ -47,44 +47,56 @@ const TeamAnalytics = ({route, navigation}) => {
     const getSpecificData = (section) => {
         switch (section) {
             case ("Auto Points"): {
-                const points = route.params.teamData.map((item) => {
-                    return 6*Number(item[7]) + 4*Number(item[8])+ 3*Number(item[9]);
+                const points = route.params.teamData.map((md) => {
+                    return 6*(Number(md[7])+Number(md[10])) + 4*(Number(md[8])+Number(md[11]))+ 3*(Number(md[9])+Number(md[12]));
                 });
                 return points;
             } break;
             case ("Teleop Points"): {
-                const points = route.params.teamData.map((item) => {
-                    return 5*Number(item[11]) + 3*Number(item[12]) + 2*Number(item[13]);
+                const points = route.params.teamData.map((md) => {
+                    return 5*(Number(md[14])+Number(md[17])) + 3*(Number(md[15])+Number(md[18]))+ 2*(Number(md[16])+Number(md[19]));
                 });
                 return points;
             } break;
             case ("High Cargo"): {
-                const count = route.params.teamData.map((item) => {
-                    return Number(item[7]) + Number(item[11]);
+                const count = route.params.teamData.map((md) => {
+                    return Number(md[7]) + Number(md[14]);
                 });
                 return count;
             } break;
             case ("Mid Cargo"): {
-                const count = route.params.teamData.map((item) => {
-                    return Number(item[8]) + Number(item[12]);
+                const count = route.params.teamData.map((md) => {
+                    return Number(md[8]) + Number(md[15]);
                 });
                 return count;
             } break;
             case ("Low Cargo"): {
-                const count = route.params.teamData.map((item) => {
-                    return Number(item[9]) + Number(item[13]);
+                const count = route.params.teamData.map((md) => {
+                    return Number(md[9]) + Number(md[16]);
                 });
                 return count;
             } break;
             case ("Misses"): {
-                const count = route.params.teamData.map((item) => {
-                    return Number(item[10]) + Number(item[14]);
+                const count = route.params.teamData.map((md) => {
+                    return Number(md[13]) + Number(md[20]);
                 });
                 return count;
             } break;
             case ("Docking"): {
-                const count = route.params.teamData.map((item) => {
-                    return 8*Number(item[5]) + 4*Number(item[6]) + 6*Number(item[15]) + 4*Number(item[16]);
+                const count = route.params.teamData.map((md) => {
+                    return 8*Number(md[5]) + 4*Number(md[6]) + 6*Number(md[21]) + 4*Number(md[22]);
+                });
+                return count;
+            } break;
+            case ("Cubes"): {
+                const count = route.params.teamData.map((md) => {
+                    return Number(md[7])+Number(md[8])+Number(md[9]) + Number(md[14])+Number(md[15])+Number(md[16]);
+                });
+                return count;
+            } break;
+            case ("Cones"): {
+                const count = route.params.teamData.map((md) => {
+                    return Number(md[10])+Number(md[11])+Number(md[12]) + Number(md[17])+Number(md[18])+Number(md[19]);
                 });
                 return count;
             } break;
@@ -103,24 +115,29 @@ const TeamAnalytics = ({route, navigation}) => {
     const MatchDataBox = (props) => {
         return (
             <View key={props.id} style={styles.matchDataContainer}>
-                <Text style={{...globalTextStyles.secondaryText, fontSize: 24, color: CS.dark1}}>
+                <Text style={{...globalTextStyles.secondaryText, fontSize: 24*fU, color: CS.dark1}}>
                     {matchTypeValues[props.matchData[2]]} {props.matchData[1]}  —  {teamColorValues[props.matchData[3]]}
                 </Text>
 
                 {/* Auto subcontainer */}
                 <View style={styles.matchDataSubcontainer}>
-                    <Text style={{...globalTextStyles.secondaryText, fontSize: 20, color: CS.dark1}}>
+                    <Text style={{...globalTextStyles.secondaryText, fontSize: 20*fU, color: CS.dark1}}>
                         Auto
                     </Text>
 
                     <Text style={styles.dataLabel}><Text style={styles.dataText}>{props.matchData[4] == 1 ? "Did" : "Did not"}</Text> taxi</Text>
                     <View style={styles.rowAlignContainer}>
-                        <Text style={styles.dataLabel}>High   <Text style={styles.dataText}>{props.matchData[7]}</Text></Text>
-                        <Text style={styles.dataLabel}>Mid   <Text style={styles.dataText}>{props.matchData[8]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cube High-<Text style={styles.dataText}>{props.matchData[7]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cube Mid-<Text style={styles.dataText}>{props.matchData[8]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cube Low-<Text style={styles.dataText}>{props.matchData[8]}</Text></Text>
                     </View>
                     <View style={styles.rowAlignContainer}>
-                        <Text style={styles.dataLabel}>Low   <Text style={styles.dataText}>{props.matchData[7]}</Text></Text>
-                        <Text style={styles.dataLabel}>Misses   <Text style={styles.dataText}>{props.matchData[8]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cone High-<Text style={styles.dataText}>{props.matchData[10]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cone Mid-<Text style={styles.dataText}>{props.matchData[11]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cone Low-<Text style={styles.dataText}>{props.matchData[12]}</Text></Text>
+                    </View>
+                    <View style={styles.rowAlignContainer}>
+                        <Text style={styles.dataLabel}>Miss-<Text style={styles.dataText}>{props.matchData[12]}</Text></Text>
                     </View>
                     <View style={styles.rowAlignContainer}>
                         <Text style={styles.dataLabel}><Text style={styles.dataText}>{props.matchData[5] == 1 ? "Did" : "Did not"}</Text> dock</Text>
@@ -130,31 +147,36 @@ const TeamAnalytics = ({route, navigation}) => {
 
                 {/* Teleop Subcontainer */}
                 <View style={styles.matchDataSubcontainer}>
-                    <Text style={{...globalTextStyles.secondaryText, fontSize: 20, color: CS.dark1}}>
+                    <Text style={{...globalTextStyles.secondaryText, fontSize: 20*fU, color: CS.dark1}}>
                         Teleop
                     </Text>
 
                     <View style={styles.rowAlignContainer}>
-                        <Text style={styles.dataLabel}>High   <Text style={styles.dataText}>{props.matchData[11]}</Text></Text>
-                        <Text style={styles.dataLabel}>Mid   <Text style={styles.dataText}>{props.matchData[12]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cube High-<Text style={styles.dataText}>{props.matchData[14]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cube Mid-<Text style={styles.dataText}>{props.matchData[15]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cube Low-<Text style={styles.dataText}>{props.matchData[16]}</Text></Text>
                     </View>
                     <View style={styles.rowAlignContainer}>
-                        <Text style={styles.dataLabel}>Low   <Text style={styles.dataText}>{props.matchData[13]}</Text></Text>
-                        <Text style={styles.dataLabel}>Misses   <Text style={styles.dataText}>{props.matchData[14]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cone High-<Text style={styles.dataText}>{props.matchData[17]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cone Mid-<Text style={styles.dataText}>{props.matchData[18]}</Text></Text>
+                        <Text style={styles.dataLabel}>Cone Low-<Text style={styles.dataText}>{props.matchData[19]}</Text></Text>
                     </View>
                     <View style={styles.rowAlignContainer}>
-                        <Text style={styles.dataLabel}><Text style={styles.dataText}>{props.matchData[15] == 1 ? "Did" : "Did not"}</Text> dock</Text>
-                        <Text style={styles.dataLabel}><Text style={styles.dataText}>{props.matchData[16] == 1 ? "Did" : "Did not"}</Text> engage</Text>
+                        <Text style={styles.dataLabel}>Miss-<Text style={styles.dataText}>{props.matchData[20]}</Text></Text>
+                    </View>
+                    <View style={styles.rowAlignContainer}>
+                        <Text style={styles.dataLabel}><Text style={styles.dataText}>{props.matchData[21] == 1 ? "Did" : "Did not"}</Text> dock</Text>
+                        <Text style={styles.dataLabel}><Text style={styles.dataText}>{props.matchData[22] == 1 ? "Did" : "Did not"}</Text> engage</Text>
                     </View>
                 </View>
 
                 {/* Comment Subcontainer */}
                 <View style={styles.matchDataSubcontainer}>
-                    <Text style={{...globalTextStyles.secondaryText, fontSize: 20, color: CS.dark1}}>
+                    <Text style={{...globalTextStyles.secondaryText, fontSize: 20*fU, color: CS.dark1}}>
                         Comment
                     </Text>
                     <View style={styles.rowAlignContainer}>
-                        <Text style={styles.dataLabel}>"{props.matchData[17]}"</Text>
+                        <Text style={styles.dataLabel}>"{props.matchData[23]}"</Text>
                     </View>
                 </View>
 
@@ -206,7 +228,7 @@ const TeamAnalytics = ({route, navigation}) => {
 
             { checkForDNP() && (
                 <View style={styles.warningTopBar}>
-                    <Text style={{fontFamily: "LGC Light", color: CS.light2, fontSize: 16, textAlign: "center"}}>
+                    <Text style={{fontFamily: "LGC Light Italic", color: CS.light2, fontSize: 16*fU, textAlign: "center"}}>
                         A commenter has flagged this team as a <Text style={{fontFamily: "LGC Bold"}}>do not pick</Text> team!
                     </Text>
                 </View>
@@ -258,7 +280,7 @@ const TeamAnalytics = ({route, navigation}) => {
 
 
                     {   route.params.teamData.length < 3 &&
-                        <Text style={{fontFamily: "LGC Light", color: CS.light2, fontSize: 16, textAlign: "center", margin: 2*vh}}>
+                        <Text style={{fontFamily: "LGC Light", color: CS.light2, fontSize: 16*fU, textAlign: "center", margin: 2*vh}}>
                             There isn't enough data on this team to make a chart
                         </Text>
                     }
@@ -299,7 +321,7 @@ const TeamAnalytics = ({route, navigation}) => {
                         Comments
                     </Text>
                     {route.params.teamData.map((match, index) => {
-                        const comment = match[17];
+                        const comment = match[23];
                         if (comment.length !== 0) return (
                             <View key={index}>
                                 <Text style={{...globalTextStyles.labelText, margin: 0.5*vh}}>"{comment}"</Text>
@@ -343,7 +365,7 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         ...globalTextStyles.primaryText, 
-        fontSize: 36
+        fontSize: 36*fU
     },
     matchDataContainer: {
         ...globalContainerStyles.columnContainer,
@@ -371,20 +393,20 @@ const styles = StyleSheet.create({
     },
     dataText: {
         fontFamily: "LGC Bold",
-        fontSize: 14,
+        fontSize: 14*fU,
     },
     dataLabel: {
         marginVertical: 0.4*vh,
 
         fontFamily: "LGC Light Italic", // For reasons I cannot explain, setting this to "LGC Light" adds a margin of about 130 to every item using it
-        fontSize: 14,
+        fontSize: 14*fU,
     },
     statHeader: {
         ...globalTextStyles.secondaryText,
         marginTop: 2*vh,
         marginBottom: -1*vh,
 
-        fontSize: 14,
+        fontSize: 14*fU,
         color: `${CS.light1}9F`
     },
     warningTopBar: {

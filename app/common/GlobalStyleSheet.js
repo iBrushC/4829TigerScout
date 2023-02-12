@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 
-import { vh, vw } from './Constants';
+import { fU, vh, vw } from './Constants';
 import { ColorScheme as CS } from './ColorScheme';
 
 // ! This should probably have functions returning the styles given the colorscheme
@@ -155,7 +155,7 @@ const globalTextStyles = StyleSheet.create({
     primaryText: {
         // Formatting
         fontFamily: "Bebas",
-        fontSize: 48,
+        fontSize: 48*fU,
         alignSelf: "center",
 
         // Color
@@ -164,7 +164,7 @@ const globalTextStyles = StyleSheet.create({
     secondaryText: {
         // Formatting
         fontFamily: "Bebas",
-        fontSize: 36,
+        fontSize: 36*fU,
         alignSelf: "center",
 
         // Color
@@ -173,7 +173,7 @@ const globalTextStyles = StyleSheet.create({
     labelText: {
         // Formatting
         fontFamily: "LGC", 
-        fontSize: 18,
+        fontSize: 18*fU,
         letterSpacing: -1,
         alignSelf: "center",
         textAlign: "center",
@@ -184,7 +184,7 @@ const globalTextStyles = StyleSheet.create({
     matchKeyText: {
         // Formatting
         fontFamily: "LGC", 
-        fontSize: 18,
+        fontSize: 18*fU,
         letterSpacing: 1,
         alignSelf: "center",
 

@@ -2,7 +2,7 @@
 import { loadSettings } from "./LocalStorage";
 
 // Default color scheme so that other teams can easily modify the app to use whatever they want
-let ColorScheme = {
+const ColorScheme = {
     // All general colors
     light1: "#FFFFFF",
     light2: "#F7F3E1",
@@ -22,6 +22,9 @@ let ColorScheme = {
 
     // Specialty
     transparent: "#00000000",
+    header: "#4b5557",
+    cube: "#7351bd",
+    cone: "#e39a2d"
 };
 
 export { ColorScheme };

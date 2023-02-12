@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Button, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // Literally just to get cool background lmao
 
 // Component imports
-import { vh, vw } from '../../common/Constants';
+import { fU, vh, vw } from '../../common/Constants';
 import { ColorScheme as CS } from '../../common/ColorScheme';
 import { globalButtonStyles, globalTextStyles, globalContainerStyles } from '../../common/GlobalStyleSheet';
 import { TTButton } from '../components/ButtonComponents';
@@ -52,7 +52,7 @@ const Homescreen = ({route, navigation}) => {
                 textStyle={[
                     globalTextStyles.primaryText,
                     {
-                        fontSize: 60,
+                        fontSize: 60 * fU,
                         color: CS.light1
                     }
                 ]}
@@ -72,7 +72,7 @@ const Homescreen = ({route, navigation}) => {
                 textStyle={[
                     globalTextStyles.primaryText,
                     {
-                        fontSize: 42,
+                        fontSize: 42 * fU,
                         color: CS.light1
                     }
                 ]}
@@ -92,7 +92,7 @@ const Homescreen = ({route, navigation}) => {
                 textStyle={[
                     globalTextStyles.primaryText,
                     {
-                        fontSize: 42,
+                        fontSize: 42 * fU,
                         color: CS.light1
                     }
                 ]}
@@ -112,7 +112,7 @@ const Homescreen = ({route, navigation}) => {
                 textStyle={[
                     globalTextStyles.primaryText,
                     {
-                        fontSize: 42,
+                        fontSize: 42 * fU,
                         color: CS.light1
                     }
                 ]}

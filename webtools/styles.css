@@ -1,0 +1,254 @@
+/* Fonts */
+@font-face {
+    font-family: "Bebas";
+    src: url("../app/assets/fonts/Bebas/BebasNeue-Regular.ttf");
+}
+
+@font-face {
+    font-family: "LGC";
+    src: url("../app/assets/fonts/LouiseGeorgeCafe/LouisGeorgeCafe.ttf");
+}
+
+@font-face {
+    font-family: "LGC Bold";
+    src: url("../app/assets/fonts/LouiseGeorgeCafe/LouisGeorgeCafeBold.ttf");
+}
+
+@font-face {
+    font-family: "LGC Light";
+    src: url("../app/assets/fonts/LouiseGeorgeCafe/LouisGeorgeCafeLight.ttf");
+}
+
+/* Color Scheme */
+:root {
+    --light1: #FFFFFF;
+    --light2: #F7F3E1;
+    --light3: #CCC1B8;
+    
+    --accent1: #D07E32;
+    --accent2: #E17512; 
+    --accent3: #E64D27;
+    
+    --dark1: #1E1E1E;
+    --dark2: #3E4743;
+    --dark3: #3D4A4D;
+    
+    --gradient1: #2A3638F0;
+    --gradient2: #3E474321;
+    
+    --transparent: #00000000;
+    --header: #4b5557;
+    --cube: #7351bd;
+    --cone: #e39a2d;
+}
+
+/* General classes */
+html, body {
+    width:  100%;
+    height: 100%;
+    margin: 0;
+
+    background: linear-gradient(0deg, var(--gradient1) 0%, var(--gradient2) 100%);
+    background-color: var(--dark1);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+canvas {
+    /* width: 100%; */
+    aspect-ratio: 1;
+    margin: 0.1vw;
+    width: 80%;
+
+    background: var(--light1);
+    border-radius: 0.3vw;
+}
+
+button {
+    padding: 1.2vw 1.5vw;
+
+    background-color: var(--accent1);
+    color: var(--light2);
+
+    font-family: "Bebas", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    font-size: 4vh;
+
+    border-width: 0;
+    border-radius: 0.3vw;
+
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    filter: drop-shadow(0 0 0.2vw var(--accent1)); 
+    cursor: pointer;
+}
+
+button:active {
+    background-color: var(--accent2);
+    filter: brightness(1.2);
+}
+
+a {
+    padding: 1.2vw 1.5vw;
+
+    background-color: var(--accent1);
+    color: var(--light2);
+
+    font-family: "Bebas", Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    text-decoration: none;
+    font-size: 4vh;
+
+    border-width: 0;
+    border-radius: 0.3vw;
+
+    transition: all 0.2s ease;
+}
+a:hover {
+    filter: drop-shadow(0 0 0.2vw var(--accent1)); 
+}
+
+a:active {
+    background-color: var(--accent2);
+    filter: brightness(1.2);
+}
+
+.columnContainer {
+    display: flex;
+    flex: 1;
+    flex-grow: 1;
+    flex-direction: column;
+    justify-content: center;
+
+    overflow: hidden;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.rowContainer {
+    display: flex;
+    flex: 1;
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.expandVertical {
+    height: 100%
+}
+
+.expandHorizontal {
+    width: 100%
+}
+
+.selfCenter {
+    align-self: center;
+}
+
+.itemsCenter {
+    align-items: center;
+    text-align: center;
+}
+
+.sectionContainer {
+    display: flex;
+    flex: 1;
+    flex-grow: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 3vh;
+
+    background-color: var(--dark2);
+}
+
+.errorContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+
+    transform-origin: 0% 100%;
+    transform: scaleY(0);
+    height: 0px;
+
+    background-color: var(--accent3);
+}
+.errorContainer p {
+    color: var(--light1);
+    font-family: "LGC";
+}
+
+.verticalSpacer {
+    width: 0;
+    height: 50vh;
+    margin: 4vw;
+    border-width: 0 0.1vw 0 0.1vw;
+    border-color: var(--light2);
+    border-style: solid;
+}
+
+.horizontalSpacer {
+    width: 50vh;
+    height: 0;
+    margin: 1vh;
+    border-width: 0.1vw 0 0.1vw 0;
+    border-color: var(--light2);
+    border-style: solid;
+}
+
+.textInput {
+    width: 40vw;
+    resize: none;
+
+    color: var(--dark1);
+    background-color: var(--light1);
+
+    border-width: 0;
+    border-radius: 0.1vw;
+    padding: 0.2vw;
+    font-family: 'LGC', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 2vh;
+}
+
+.inputLabel {
+    width: 12vw;
+    text-align: right;
+    margin-right: 1vw;
+
+    font-family: 'LGC Bold', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 2vh;
+    color: var(--light1);
+}
+
+.miniTitle {
+    font-family: 'LGC Bold', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 3vh;
+    color: var(--light1);
+}
+
+.textCode {
+    margin-top: -2vh;
+
+    font-family: 'LGC Light', 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 1.5vh;
+    color: var(--light1);
+}
+
+.title {
+    font-family: "Bebas";
+    font-size: 9vh;
+    letter-spacing: 1vw;
+    color: var(--light1)
+}
+
+.subtitle {
+    font-family: "Bebas";
+    font-size: 6vh;
+    letter-spacing: 0.5vw;
+    color: var(--light2)
+}
