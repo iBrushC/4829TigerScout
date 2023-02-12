@@ -47,7 +47,7 @@ service firebase.storage {
 ```
 This gives all users read and write access, but only allows the owner of the bucket to delete files through the console. Keep in mind that **TigerScout does not use authentication, which is why you shouldn't give your code and password to anyone you don't trust**.
 
-Once everything above is set up, go to [INSERT LINK TO WEBTOOLS HERE] and use the code generator tool. 
+Once everything above is set up, go to https://ibrushc.github.io/4829TigerScout/ and use the code generator tool. 
 - **Bucket Name** is whatever name you want to show up in the app, and does not have to be connected to your Firebase bucket name. 
 - **Cloud Config** is all the settings required to connect to your bucket, which you can find by going to your project settings and scrolling to the bottom. Copy and paste the `firebaseConfig` variable definition and paste it in, it should look like this:
 ```
