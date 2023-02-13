@@ -67,5 +67,8 @@ const firebaseConfig = {
 
 Then click **Create QR Code**. If something was entered wrong an error will pop up at the top, otherwise a QR and text code will be generated. You can download a 2000x2000px version with the **Download** button. If any team members don't have a functioning camera they can connect with the text code that appears below the QR code.
 
+## Spreadsheet Downloader
+Because teams may want to use their data outside of the app, there is an included tool to download all the data you have as spreadsheet in `xlsx` format, which is supported by Excel and Google Sheets. To use it you need to enable cross origin resource sharing (or *CORS*) in order to use it, since naturally the bucket will refuse to give your data to a random website. To enable CORS in your bucket, download the `cors.json` file from this repository and follow https://firebase.google.com/docs/storage/web/download-files#cors_configuration.
+
 ## Security Notice
 While measures have been put in place to ensure that unwanted users cannot access edit data, I am far from a professional in cybersecurity and cannot guarantee security. To ensure that unwanted users don't have edit access to your data, do not share your bucket password with anyone you don't know and trust. If you wish to share data with someone you don't know, give them a code where they are only given viewer permissions (as seen in *Making a Bucket*) and enter the password for them.
