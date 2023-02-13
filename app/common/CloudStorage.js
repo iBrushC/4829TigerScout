@@ -1,7 +1,7 @@
 // Library imports
 import LZString from "lz-string";
 import { initializeApp, getApp, getApps, deleteApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getBytes, listAll, getBlob } from "firebase/storage";
+import { ref, uploadBytes, listAll, getBlob } from "firebase/storage";
 import { Promise } from "bluebird";
 
 // Component imports
@@ -70,7 +70,7 @@ const readStringFromCloud = async (storage, filepath) => {
     try {
         const blob = await getBlob(storageRef);
         const blobResponse = new Response(blob);
-        const stringData = await blobResponse.text()
+        const stringData = await blobResponse.text();
         return stringData;
     } catch (e) {
         console.error(`Error Downloading File: ${e}`);
@@ -111,7 +111,7 @@ const downloadAllFilesFromCloud = async (storage, subpath) => {
         for (const stringData of promiseData) {
             const data = deserializeData(stringData);
             const teamNumber = data[0];
-            // If there's already something there, push the new data, otherwise creat an array
+            // If there's already something there, push the new data, otherwise create an array
             if (fileContents[teamNumber] == null) fileContents[teamNumber] = [data];
             else fileContents[teamNumber].push(data);
         }

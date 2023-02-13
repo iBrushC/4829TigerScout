@@ -1,0 +1,7 @@
+[
+    {
+      "origin": ["http://localhost:5500/", "https://ibrushc.github.io/4829TigerScout/"],
+      "method": ["GET"],
+      "maxAgeSeconds": 3600
+    }
+]

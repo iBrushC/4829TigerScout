@@ -5,25 +5,24 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="webtools/styles.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.5.1/qrcode.min.js"></script>
-    <script src="./webtools/index.js"></script>
+    <link rel="icon" href="app/assets/adaptive-icon.png"> <!-- !! UPDATE WITH ACTUAL ICON !! -->
     <title>TigerScout Webtools</title>
 </head>
 <body>
+    <script type="module" src="./webtools/dist/bundle.js"></script>
     <div class="columnContainer">
-        <h1 class="title selfCenter">TigerScout Webtools</h1>
+        <h1 class="title selfCenter" style="margin-bottom: -1.4vh;">TigerScout Webtools</h1>
 
+        <!-- Error header -->
+        <div class="errorContainer itemsCenter" id="QRerror">
+            <p>Error</p>
+        </div>
         <!-- QR Code Generator -->
-        <div class="columnContainer">
-            <!-- Error header -->
-            <div class="errorContainer itemsCenter" id="QRerror">
-                <p>Error</p>
-            </div>
+        <div class="columnContainer sectionBackground">
+            <h1 class="subtitle selfCenter">QR Code Generator</h1>
             <div class="sectionContainer">
                 <!-- Enter settings -->
                 <div style="flex-grow: 1;" class="columnContainer itemsCenter">
-                    <h1 class="subtitle">Enter Bucket Settings</h1>
     
                     <div class="rowContainer itemsCenter">
                         <p class="inputLabel">Bucket Name</p>
@@ -68,7 +67,7 @@
                     </div>
     
                     <br><br><br>
-                    <button onclick="generateQRFromData();">Create QR Code</button>
+                    <button onclick="window.generateQRFromData();">Create QR Code</button>
                     <br><br>
                 </div>
     
@@ -76,7 +75,6 @@
     
                 <!-- Show generated code -->
                 <div style="flex-grow: 0.7;" class="columnContainer itemsCenter">
-                    <h1 class="subtitle">Generated Code</h1>
                     <canvas id="QRcanvas"></canvas>
                     
                     <br>
@@ -90,7 +88,40 @@
 
         <br><br>
 
+        <!-- Error header -->
+        <div class="errorContainer itemsCenter" id="XLSXerror">
+            <p>Error</p>
+        </div>
         <!-- CSV data downloader -->
+        <div class="columnContainer sectionBackground">
+            <h1 class="subtitle selfCenter">CSV Downloader</h1>
+            <div class="sectionContainer">
+                <!-- Settings -->
+                <div style="flex-grow: 1;" class="columnContainer itemsCenter">
+                    <div class="rowContainer">
+                        <p class="inputLabel">Cloud Config</p>
+                        <textarea id="XLSXcloudConfig" class="textInput" rows="8" spellcheck="false"></textarea>
+                    </div>
+                    <div class="rowContainer">
+                        <p class="inputLabel">Subpath</p>
+                        <input 
+                            id="XLSXsubpath" 
+                            class="textInput" 
+                            spellcheck="false"
+                            maxlength="32"
+                        >
+                    </div>
+
+                    <br><br>
+                    <button id="XLSXdownload" onclick="downloadDataToXLSX()">Download CSV</button>
+                    <br><br>
+                </div>
+
+                </div>
+            </div>
+        </div>
+
+        <br><br>
 
     </div>
 </body>

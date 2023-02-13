@@ -160,7 +160,9 @@ a:active {
     justify-content: space-between;
 
     padding: 3vh;
+}
 
+.sectionBackground {
     background-color: var(--dark2);
 }
 

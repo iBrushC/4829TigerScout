@@ -1,0 +1,25 @@
+{
+  "name": "webtools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --mode=development"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.7.2",
+    "crypto-js": "^4.1.1",
+    "firebase": "^9.17.1",
+    "qrcode": "^1.5.1",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
+  }
+}
