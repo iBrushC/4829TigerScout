@@ -180,13 +180,16 @@ const downloadDataToXLSX = async () => {
     }
 
     // Preliminary check somewhat
-    const data = await getBlob(ref(storage, allFiles[0].fullPath));
-    if (data === undefined) {
+    storage.maxOperationRetryTime = 5000; // Decrease to see if theres an error
+    try {
+        await getBlob(ref(storage, allFiles[0].fullPath));
+    } catch {
         showError("Failed to download files because CORS configuration has not been set");
         return;
     }
 
     // Download everything
+    storage.maxOperationRetryTime = 120000; // Revert back to original
     const fileStringData = async (file) => {
         const storageRef = ref(storage, file.fullPath);
         const fileBlob = await getBlob(storageRef);
@@ -237,8 +240,8 @@ const downloadDataToXLSX = async () => {
                 Number(match[5]) ? true : false,
                 Number(match[6]) ? true : false,
                 ...match.slice(7, 21),
-                Number(data[21]) ? true : false,
-                Number(data[22]) ? true : false,
+                Number(match[21]) ? true : false,
+                Number(match[22]) ? true : false,
                 match[23]
             ]))
         ]);
