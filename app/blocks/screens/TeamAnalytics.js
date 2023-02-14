@@ -32,7 +32,7 @@ const TeamAnalytics = ({route, navigation}) => {
 
     const checkForDNP = () => {
         for (const match of route.params.teamData) {
-            const comment = match[23].toLowerCase().replaceAll("’", "'");
+            const comment = match[23].toLowerCase().replace(/’/g, "'");
             if (
                 comment.includes("dnp") || 
                 comment.includes("don't pick") || 
