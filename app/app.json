@@ -1,8 +1,10 @@
 {
   "expo": {
-    "name": "TigerScout 2.0",
-    "slug": "TigerScout 2.0",
-    "version": "2.0.0",
+    "name": "TigerScout",
+    "slug": "TigerScout",
+    "privacy": "public",
+    "description": "An easy, open source cloud-integrated scouting app made by 4829.",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,7 +14,8 @@
       "backgroundColor": "#1E1E1E"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/156bb3a7-5cf2-4e1d-b89f-e1e5a1f45f12"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -21,6 +24,8 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.team4829.tigerscout",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#1E1E1E"
@@ -28,6 +33,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "156bb3a7-5cf2-4e1d-b89f-e1e5a1f45f12"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

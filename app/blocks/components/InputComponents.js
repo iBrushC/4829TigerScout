@@ -44,7 +44,11 @@ const TTNumberInput = (props) => {
         if (value.length != 0) {
             if (props.state != null && props.setState != null) {
                 const newValue = Math.min(Math.max(Number(value), stateMin), stateMax);
-                props.setState(newValue.toString());
+                if (Number.isNaN(newValue)) {
+                    props.setState("0");
+                } else {
+                    props.setState(newValue.toString());
+                }
             }
         } else {
             props.setState("");
