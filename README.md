@@ -1,5 +1,5 @@
 # TigerScout
-TigerScout is a easy, open source cloud-integrated scouting app made by 4829. It allows for simple and objective scouting, along with useful statistics for strategizing and alliance selection. Firebase cloud integration allows for seamless data syncing, without having to worry about QR codes or CSV files.
+TigerScout is an easy, open source cloud-integrated scouting app made by 4829. It allows for simple and objective scouting, along with useful statistics for strategizing and alliance selection. Firebase cloud integration allows for seamless data syncing, without having to worry about QR codes or CSV files.
 
 <sub>All code written and maintained by Andrew M. Combs</sub>
 
