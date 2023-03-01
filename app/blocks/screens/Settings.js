@@ -61,22 +61,6 @@ const Settings = ({route, navigation}) => {
 
         // Loading firebase from settings
         initializeFirebaseFromSettings();
-
-        // !! REMOVE !!
-        // const sampleSettings = {
-        //     "bucketName": "4829 Scoutbucket",
-        //     "cloudConfig": {
-        //         "apiKey": "AIzaSyAQwBk8GzpPkvUnrKPS7IBdNHFOArPjToo",
-        //         "authDomain": "scouting-ed3f1.firebaseapp.com",
-        //         "projectId": "scouting-ed3f1",
-        //         "storageBucket": "scouting-ed3f1.appspot.com",
-        //         "messagingSenderId": "601336489441",
-        //         "appId": "1:601336489441:web:ea260c66605836b0cc9ea0"
-        //     },
-        //     "subpath": "testFolder/",
-        //     "permissions": "reader"
-        // };
-        // console.log(CryptoJS.AES.encrypt(JSON.stringify(sampleSettings), "weehaw4829!").toString());
     }, []);
 
     // Checks to make sure permission exists
