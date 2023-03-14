@@ -4,7 +4,7 @@
     "slug": "TigerScout",
     "privacy": "public",
     "description": "An easy, open source cloud-integrated scouting app made by 4829.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -21,7 +21,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.team4829.tigerscout",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow TigerScout to access your camera. TigerScout uses the camera exclusively to scan QR codes and allows you to connect to cloud storage buckets."
+      }
     },
     "android": {
       "package": "com.team4829.tigerscout",
@@ -41,6 +45,14 @@
     },
     "runtimeVersion": {
       "policy": "sdkVersion"
-    }
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow TigerScout to access your camera. TigerScout uses the camera exclusively to scan QR codes and allows you to connect to cloud storage buckets."
+        }
+      ]
+    ]
   }
 }

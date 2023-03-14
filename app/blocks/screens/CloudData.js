@@ -15,7 +15,7 @@ import { ColorScheme as CS } from '../../common/ColorScheme';
 import { TTDropdown } from '../components/InputComponents';
 
 const sortableValues = ["Team Number", "Auto Points", "Teleop Points", "Misses", "Cubes", "Cones", "Docking"];
-const sortableKeys = [null, "auto", "teleop", "misses", "docking"];
+const sortableKeys = [null, "auto", "teleop", "misses", "cubes", "cones", "docking"];
 
 // Main function
 const CloudData = ({route, navigation}) => {
@@ -83,7 +83,10 @@ const CloudData = ({route, navigation}) => {
 
     const sortMatches = (teamData) => {
         const compareFunction = (a, b) => {
-            return a[2] >= b[2];
+            return (
+                Number(a[2]) * 300 + Number(a[1]) >
+                Number(b[2]) * 300 + Number(b[1])
+            )
         }
         return teamData.sort(compareFunction);
     }

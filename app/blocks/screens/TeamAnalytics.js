@@ -108,6 +108,7 @@ const TeamAnalytics = ({route, navigation}) => {
             return `${matchTypeValues[item[2]][0]}${item[1]}`;
         });
         setChartLabels(matchAbreviations);
+        
         setChartData(getSpecificData("Teleop Points"));
     }, [])
 
@@ -213,6 +214,9 @@ const TeamAnalytics = ({route, navigation}) => {
                             propsForDots: {
                                 r: 1*vh,
                                 strokeWidth: 0,
+                            },
+                            propsForLabels: {
+                                fontSize: 8
                             }
                         }}
                         style={{
